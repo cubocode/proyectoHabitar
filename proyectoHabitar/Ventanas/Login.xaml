@@ -18,6 +18,7 @@
         <Button Content="Button" HorizontalAlignment="Center" Height="35" Margin="0,102,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120"/>
         <Button x:Name="btnIngresar" Content="Ingresar" HorizontalAlignment="Center" Height="35" Margin="0,102,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Click="btnIngresar_Click"/>
         <Button x:Name="btnSalir" Content="Salir" HorizontalAlignment="Center" Height="35" Margin="0,142,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Click="btnSalir_Click"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="46" Margin="15,96,0,0" Grid.Row="1" VerticalAlignment="Top" Width="95"/>
 
     </Grid>
 </Window>
