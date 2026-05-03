@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Ventanas\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Imagenes\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Ventanas\logo.png" />
+  </ItemGroup>
+
+</Project>
