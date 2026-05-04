@@ -6,7 +6,39 @@
         xmlns:local="clr-namespace:proyectoHabitar.Ventanas"
         mc:Ignorable="d"
         Title="Home" Height="450" Width="800">
-    <Grid>
-        
+    <Grid Margin="10,10,0,0" HorizontalAlignment="Left" Width="790">
+        <StackPanel Margin="20">
+            <!-- Título Principal -->
+            <Label Content="Proyecto habitAR" 
+           FontSize="32" 
+           FontWeight="Bold" 
+           Foreground="RoyalBlue" 
+           HorizontalAlignment="Center"/>
+
+            <!-- Subtítulo / Rol -->
+            <Label Content="Panel de Gestión - Usuario Empleado" 
+           FontSize="16" 
+           Foreground="Gray" 
+           HorizontalAlignment="Center" 
+           Margin="0,0,0,30"/>
+
+            <!-- Tarjeta de Bienvenida con la misión -->
+            <Border Background="#F0F5FF" CornerRadius="10" Padding="15" Margin="0,0,0,20">
+                <TextBlock Text="Bienvenido al sistema de geolocalización y análisis censal para el apoyo a familias en situación de vulnerabilidad." 
+                   TextWrapping="Wrap" 
+                   FontSize="14" 
+                   TextAlignment="Center" 
+                   Foreground="#333"/>
+            </Border>
+
+            <!-- Botones de Acción (Ejemplos) -->
+            <UniformGrid Columns="2" Height="100">
+                <Button Content="📍 Ver Mapa Crítico" Margin="5" Background="DodgerBlue" Foreground="White" FontWeight="Bold"/>
+                <Button Content="📊 Datos Censales" Margin="5" Background="DodgerBlue" Foreground="White" FontWeight="Bold"/>
+                <Button Content="🏠 Nueva Encuesta" Margin="5" Background="#28a745" Foreground="White" FontWeight="Bold"/>
+                <Button Content="👤 Perfil" Margin="5" Background="LightGray"/>
+            </UniformGrid>
+        </StackPanel>
+
     </Grid>
 </Window>
