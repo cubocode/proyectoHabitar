@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="proyectoHabitar.Ventanas.FormAlta"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:proyectoHabitar.Ventanas"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="800">
+
+    <Grid Background="#F5F6F8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#1E293B" Padding="25,20" CornerRadius="0,0,10,10" Margin="0,0,0,15">
+            <StackPanel>
+                <TextBlock Text="Gestión Territorial - Relevamientos" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Carga de datos del beneficiario titular y su grupo familiar conviviente." FontSize="13" Foreground="#94A3B8" Margin="0,3,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,0,20,20">
+            <StackPanel>
+
+                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="👤 Datos del Beneficiario Titular" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Nro DNI" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtTitularDni" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                <TextBlock Text="Fecha de Nacimiento" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <DatePicker x:Name="dpTitularFechaNac" Height="32" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Estado Civil" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbTitularEstadoCivil" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Soltero/a"/>
+                                    <ComboBoxItem Content="Casado/a"/>
+                                    <ComboBoxItem Content="Unión de Hecho"/>
+                                    <ComboBoxItem Content="Divorciado/a"/>
+                                    <ComboBoxItem Content="Viudo/a"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel>
+                            <TextBlock Text="Apellido y Nombres Completos" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <TextBox x:Name="txtTitularNombre" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="👫 Grupo Familiar - Cónyuge / Pareja" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+
+                        <StackPanel Margin="0,0,0,15">
+                            <TextBlock Text="Apellido y Nombres del Cónyuge" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <TextBox x:Name="txtConyugeNombre" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                        </StackPanel>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Nro DNI Cónyuge" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtConyugeDni" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Fecha de Nacimiento Cónyuge" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <DatePicker x:Name="dpConyugeFechaNac" Height="32" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="👶 Hijos a Cargo" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Apellido y Nombres Hijo 1" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
+                                <TextBox x:Name="txtHijo1Nombre" Height="30" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Fecha Nacimiento" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
+                                <DatePicker x:Name="dpHijo1FechaNac" Height="30"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Apellido y Nombres Hijo 2" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
+                                <TextBox x:Name="txtHijo2Nombre" Height="30" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Fecha Nacimiento" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
+                                <DatePicker x:Name="dpHijo2FechaNac" Height="30"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Apellido y Nombres Hijo 3" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
+                                <TextBox x:Name="txtHijo3Nombre" Height="30" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Fecha Nacimiento" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
+                                <DatePicker x:Name="dpHijo3FechaNac" Height="30"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Apellido y Nombres Hijo 4" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
+                                <TextBox x:Name="txtHijo4Nombre" Height="30" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Fecha Nacimiento" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
+                                <DatePicker x:Name="dpHijo4FechaNac" Height="30"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Apellido y Nombres Hijo 5" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
+                                <TextBox x:Name="txtHijo5Nombre" Height="30" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Fecha Nacimiento" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
+                                <DatePicker x:Name="dpHijo5FechaNac" Height="30"/>
+                            </StackPanel>
+                        </Grid>
+
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,10">
+                    <Button x:Name="btnLimpiar" Content="Limpiar Campos" Width="130" Height="38" Background="Transparent" Foreground="#64748B" BorderThickness="0" Margin="0,0,15,0" Cursor="Hand"/>
+                    <Button x:Name="btnGuardarCenso" Content="💾 Guardar Relevamiento" Width="190" Height="38" Background="#3B82F6" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
