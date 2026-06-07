@@ -5,180 +5,186 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:proyectoHabitar.Ventanas"
              mc:Ignorable="d" 
-             d:DesignHeight="650" d:DesignWidth="800">
+             d:DesignHeight="650" d:DesignWidth="800"
+             Loaded="UserControl_Loaded">
 
     <Grid Background="#F5F6F8">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid Margin="25">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="#1E293B" Padding="25,20" CornerRadius="0,0,10,10" Margin="0,0,0,15">
-            <StackPanel>
-                <TextBlock Text="Gestión Territorial - Relevamientos" FontSize="24" FontWeight="Bold" Foreground="White"/>
-                <TextBlock Text="Carga de datos del beneficiario titular y su grupo familiar conviviente." FontSize="13" Foreground="#94A3B8" Margin="0,3,0,0"/>
-            </StackPanel>
-        </Border>
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,0,20,20">
-            <StackPanel>
+                <StackPanel Grid.Column="0" Orientation="Vertical">
+                    <TextBlock Text="Padrón de Beneficiarios" FontSize="24" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
 
-                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="👤 Datos del Beneficiario Titular" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+                        <Border Background="White" CornerRadius="6" BorderBrush="#E2E8F0" BorderThickness="1" Width="200" Padding="8,4" Margin="0,0,15,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="🔍" FontSize="14" Foreground="#94A3B8" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBox x:Name="txtBuscar" Grid.Column="1" Background="Transparent" BorderThickness="0" FontSize="13" VerticalContentAlignment="Center" Foreground="#1E293B" TextChanged="txtBuscar_TextChanged"/>
+                            </Grid>
+                        </Border>
 
-                        <Grid Margin="0,0,0,15">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Nro DNI" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <TextBox x:Name="txtTitularDni" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
-                                <TextBlock Text="Fecha de Nacimiento" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <DatePicker x:Name="dpTitularFechaNac" Height="32" VerticalContentAlignment="Center"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="2">
-                                <TextBlock Text="Estado Civil" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <ComboBox x:Name="cmbTitularEstadoCivil" Height="32" VerticalContentAlignment="Center">
-                                    <ComboBoxItem Content="Soltero/a"/>
-                                    <ComboBoxItem Content="Casado/a"/>
-                                    <ComboBoxItem Content="Unión de Hecho"/>
-                                    <ComboBoxItem Content="Divorciado/a"/>
-                                    <ComboBoxItem Content="Viudo/a"/>
-                                </ComboBox>
-                            </StackPanel>
-                        </Grid>
-
-                        <StackPanel>
-                            <TextBlock Text="Apellido y Nombres Completos" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                            <TextBox x:Name="txtTitularNombre" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,5">
+                            <TextBlock Text="Filtrar por:" Foreground="#64748B" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold"/>
+                            <Button x:Name="btnFiltroTodos" Content="Todos" Width="55" Height="26" Margin="0,0,4,0" Cursor="Hand" Background="#334155" Foreground="White" FontWeight="SemiBold" Click="FiltroColor_Click"/>
+                            <Button x:Name="btnFiltroRojo" Content="🔴 Rojo" Width="65" Height="26" Margin="0,0,4,0" Cursor="Hand" Background="White" Foreground="#EF4444" BorderBrush="#EF4444" FontWeight="SemiBold" Click="FiltroColor_Click"/>
+                            <Button x:Name="btnFiltroAmarillo" Content="🟡 Amar." Width="65" Height="26" Margin="0,0,4,0" Cursor="Hand" Background="White" Foreground="#D97706" BorderBrush="#F59E0B" FontWeight="SemiBold" Click="FiltroColor_Click"/>
+                            <Button x:Name="btnFiltroVerde" Content="🟢 Verde" Width="65" Height="26" Cursor="Hand" Background="White" Foreground="#10B981" BorderBrush="#10B981" FontWeight="SemiBold" Click="FiltroColor_Click"/>
                         </StackPanel>
-                    </StackPanel>
-                </Border>
-
-                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="👫 Grupo Familiar - Cónyuge / Pareja" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
-
-                        <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Apellido y Nombres del Cónyuge" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                            <TextBox x:Name="txtConyugeNombre" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
-                        </StackPanel>
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Nro DNI Cónyuge" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <TextBox x:Name="txtConyugeDni" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Fecha de Nacimiento Cónyuge" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <DatePicker x:Name="dpConyugeFechaNac" Height="32" VerticalContentAlignment="Center"/>
-                            </StackPanel>
-                        </Grid>
-                    </StackPanel>
-                </Border>
-
-                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="👶 Hijos a Cargo" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
-
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Apellido y Nombres Hijo 1" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
-                                <TextBox x:Name="txtHijo1Nombre" Height="30" VerticalContentAlignment="Center"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Fecha Nacimiento" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
-                                <DatePicker x:Name="dpHijo1FechaNac" Height="30"/>
-                            </StackPanel>
-                        </Grid>
-
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Apellido y Nombres Hijo 2" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
-                                <TextBox x:Name="txtHijo2Nombre" Height="30" VerticalContentAlignment="Center"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Fecha Nacimiento" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
-                                <DatePicker x:Name="dpHijo2FechaNac" Height="30"/>
-                            </StackPanel>
-                        </Grid>
-
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Apellido y Nombres Hijo 3" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
-                                <TextBox x:Name="txtHijo3Nombre" Height="30" VerticalContentAlignment="Center"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Fecha Nacimiento" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
-                                <DatePicker x:Name="dpHijo3FechaNac" Height="30"/>
-                            </StackPanel>
-                        </Grid>
-
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Apellido y Nombres Hijo 4" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
-                                <TextBox x:Name="txtHijo4Nombre" Height="30" VerticalContentAlignment="Center"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Fecha Nacimiento" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
-                                <DatePicker x:Name="dpHijo4FechaNac" Height="30"/>
-                            </StackPanel>
-                        </Grid>
-
-                        <Grid Margin="0,0,0,5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Apellido y Nombres Hijo 5" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
-                                <TextBox x:Name="txtHijo5Nombre" Height="30" VerticalContentAlignment="Center"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Fecha Nacimiento" Foreground="#64748B" FontSize="11" Margin="0,0,0,4"/>
-                                <DatePicker x:Name="dpHijo5FechaNac" Height="30"/>
-                            </StackPanel>
-                        </Grid>
-
-                    </StackPanel>
-                </Border>
-
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,10">
-                    <Button x:Name="btnLimpiar" Content="Limpiar Campos" Width="130" Height="38" Background="Transparent" Foreground="#64748B" BorderThickness="0" Margin="0,0,15,0" Cursor="Hand"/>
-                    <Button x:Name="btnGuardarCenso" Content="💾 Guardar Relevamiento" Width="190" Height="38" Background="#3B82F6" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>
+                    </WrapPanel>
                 </StackPanel>
 
-            </StackPanel>
-        </ScrollViewer>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="10,0,0,5">
+                    <Button x:Name="btnAgregar" Content="➕ Agregar" Width="95" Height="34" Background="#10B981" Foreground="White" FontWeight="SemiBold" Margin="0,0,8,0" Cursor="Hand" Click="btnAgregar_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button x:Name="btnEditar" Content="✏️ Editar" Width="85" Height="34" Background="#F59E0B" Foreground="White" FontWeight="SemiBold" Margin="0,0,8,0" Cursor="Hand" Click="btnEditar_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button x:Name="btnBaja" Content="🗑️ Dar de Baja" Width="110" Height="34" Background="#EF4444" Foreground="White" FontWeight="SemiBold" Cursor="Hand" Click="btnBaja_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <Border Grid.Row="1" Background="White" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" Padding="10">
+                <DataGrid x:Name="dgBeneficiarios" Background="Transparent" BorderThickness="0" RowBackground="White" 
+                          AlternatingRowBackground="#F8FAFC" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#E2E8F0"
+                          IsReadOnly="True" AutoGenerateColumns="False" MouseDoubleClick="dgBeneficiarios_MouseDoubleClick">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Fecha Relev." Width="105" Binding="{Binding FechaRelevamiento, StringFormat=\{0:dd/MM/yyyy\}}"/>
+                        <DataGridTextColumn Header="Nombre Titular" Width="1.8*" Binding="{Binding Nombre}"/>
+                        <DataGridTextColumn Header="DNI" Width="1*" Binding="{Binding Dni}"/>
+                        <DataGridTextColumn Header="Domicilio / Localización" Width="2.2*" Binding="{Binding Domicilio}"/>
+
+                        <DataGridTemplateColumn Header="Prioridad" Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Ellipse x:Name="dotSemaforo" Width="12" Height="12" Fill="#94A3B8" Margin="0,0,8,0"/>
+                                        <TextBlock x:Name="txtPrioridad" Text="{Binding ColorSemaforo}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding ColorSemaforo}" Value="Rojo">
+                                            <Setter TargetName="dotSemaforo" Property="Fill" Value="#EF4444"/>
+                                            <Setter TargetName="txtPrioridad" Property="Foreground" Value="#EF4444"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ColorSemaforo}" Value="Amarillo">
+                                            <Setter TargetName="dotSemaforo" Property="Fill" Value="#F59E0B"/>
+                                            <Setter TargetName="txtPrioridad" Property="Foreground" Value="#D97706"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ColorSemaforo}" Value="Verde">
+                                            <Setter TargetName="dotSemaforo" Property="Fill" Value="#10B981"/>
+                                            <Setter TargetName="txtPrioridad" Property="Foreground" Value="#10B981"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="ModalDetalle" Background="#80000000" Visibility="Collapsed">
+            <Border Background="#F8FAFC" Width="740" Height="490" CornerRadius="12" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="#CBD5E1" BorderThickness="1.5">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock x:Name="lblModalTitulo" Text="Ficha Social de Emergencia" FontSize="20" FontWeight="Bold" Foreground="#1E293B"/>
+                            <TextBlock x:Name="lblModalSemaforo" Text="Prioridad Asignada: -" FontSize="12" FontWeight="SemiBold" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <Button Content="✕" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Foreground="#64748B" FontSize="18" FontWeight="Bold" Cursor="Hand" Click="btnCerrarModal_Click"/>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4.5*"/>
+                            <ColumnDefinition Width="3.5*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,15,0">
+                            <StackPanel>
+                                <TextBlock Text="📄 DATOS DE IDENTIFICACIÓN" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,8"/>
+                                <TextBlock x:Name="txtModalDocumentos" Text="CUIL: -\nDNI: -\nGénero: -" FontSize="13" Foreground="#1E293B" Margin="0,0,0,15" LineHeight="20"/>
+
+                                <TextBlock Text="📞 DATOS DE CONTACTO Y LOCALIZACIÓN" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,8"/>
+                                <TextBlock x:Name="txtModalContacto" Text="Celular: -\nEmail: -\nDirección: -" FontSize="13" Foreground="#1E293B" Margin="0,0,0,15" LineHeight="20"/>
+
+                                <TextBlock Text="🏠 INFRAESTRUCTURA Y CRITICIDAD PREVIA" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,8"/>
+                                <TextBlock x:Name="txtModalVivienda" Text="Tipo Vivienda: -\nAgua: -\nBaño: -" FontSize="13" Foreground="#1E293B" Margin="0,0,0,5" LineHeight="20"/>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <Border Grid.Column="1" Background="#E2E8F0" CornerRadius="8" BorderBrush="#CBD5E1" BorderThickness="1" Padding="15">
+                            <Grid>
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="🗺️" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <TextBlock Text="Google Maps" FontSize="14" FontWeight="Bold" Foreground="#475569" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="txtModalDireccionMapa" Text="Cargando localización..." FontSize="11" Foreground="#64748B" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                                    <Border Background="#64748B" CornerRadius="4" Padding="8,4" Margin="0,15,0,0" HorizontalAlignment="Center">
+                                        <TextBlock Text="Módulo Pre-Cargado" FontSize="10" FontWeight="Bold" Foreground="White"/>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                        <Button x:Name="btnDescargarPdf" Content="📄 Descargar PDF" Height="32" Width="120" Margin="0,0,8,0" Background="#10B981" Foreground="White" FontWeight="SemiBold" Cursor="Hand" Click="btnDescargarPdf_Click">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="4"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                        <Button x:Name="btnImprimirFicha" Content="🖨️ Imprimir Ficha" Height="32" Width="120" Margin="0,0,8,0" Background="#3B82F6" Foreground="White" FontWeight="SemiBold" Cursor="Hand" Click="btnImprimirFicha_Click">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="4"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                        <Button Content="Cerrar Ficha" Height="32" Width="100" Background="#334155" Foreground="White" FontWeight="Medium" Cursor="Hand" Click="btnCerrarModal_Click">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="4"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

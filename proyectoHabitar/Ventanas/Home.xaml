@@ -6,24 +6,41 @@
 
     <Window.Resources>
         <Storyboard x:Key="AbrirMenu">
-            <DoubleAnimation Storyboard.TargetName="GridMenuLateral"
-                             Storyboard.TargetProperty="Width"
-                             From="60" To="250" Duration="0:0:0.3">
+            <DoubleAnimation Storyboard.TargetName="GridMenuLateral" Storyboard.TargetProperty="Width" From="60" To="250" Duration="0:0:0.3">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
-
         <Storyboard x:Key="CerrarMenu">
-            <DoubleAnimation Storyboard.TargetName="GridMenuLateral"
-                             Storyboard.TargetProperty="Width"
-                             From="250" To="60" Duration="0:0:0.3">
+            <DoubleAnimation Storyboard.TargetName="GridMenuLateral" Storyboard.TargetProperty="Width" From="250" To="60" Duration="0:0:0.3">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseIn"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
+
+        <Style x:Key="BotónMenuModerno" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bg" Background="{TemplateBinding Background}" Padding="15,0,0,0">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bg" Property="Background" Value="#2D3748"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid Background="#F5F6F8">
@@ -32,62 +49,121 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid x:Name="GridMenuLateral" Width="60" Background="#1E293B" HorizontalAlignment="Left" Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <Grid Grid.Column="0">
+            <Grid x:Name="GridMenuLateral" Width="60" Background="#1E293B" HorizontalAlignment="Left">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <Button x:Name="btnToggleMenu" Grid.Row="0" Content="☰" 
-                    FontSize="20" Background="Transparent" Foreground="White" BorderThickness="0"
-                    HorizontalAlignment="Left" Width="60" Height="60" Click="btnToggleMenu_Click"/>
-
-            <StackPanel Grid.Row="1" Margin="0,20,0,0">
-
-                <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Height="50" HorizontalContentAlignment="Left" Click="Menu_Dashboard_Click">
-                    <StackPanel Orientation="Horizontal" Margin="15,0,0,0">
-                        <TextBlock Text="📊" FontSize="20" VerticalAlignment="Center" Foreground="White"/>
-                        <TextBlock Text="Dashboard" FontSize="14" Margin="20,0,0,0" VerticalAlignment="Center" Foreground="White"/>
-                    </StackPanel>
+                <Button x:Name="btnToggleMenu" Grid.Row="0" HorizontalAlignment="Stretch" Height="60" Cursor="Hand" Click="btnToggleMenu_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="bgToggle" Background="Transparent" Padding="0,0,18,0">
+                                <ContentPresenter x:Name="content" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="bgToggle" Property="Background" Value="#2D3748"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                    <TextBlock Text="☰" FontSize="20" Foreground="White"/>
                 </Button>
 
-                <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Height="50" HorizontalContentAlignment="Left" Click="Menu_Censos_Click">
-                    <StackPanel Orientation="Horizontal" Margin="15,0,0,0">
-                        <TextBlock Text="📋" FontSize="20" VerticalAlignment="Center" Foreground="White"/>
-                        <TextBlock Text="Beneficiarios" FontSize="14" Margin="20,0,0,0" VerticalAlignment="Center" Foreground="White"/>
-                    </StackPanel>
-                </Button>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,10,0,20">
+                    <Image Height="35" Width="35" Source="/Ventanas/logo.png" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                    <TextBlock x:Name="txtLogoTitle" Text="HabitAR" FontSize="18" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                </StackPanel>
 
-                <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Height="50" HorizontalContentAlignment="Left" Click="Menu_Mapa_Click">
-                    <StackPanel Orientation="Horizontal" Margin="15,0,0,0">
-                        <TextBlock Text="🗺️" FontSize="20" VerticalAlignment="Center" Foreground="White"/>
-                        <TextBlock Text="Opcion 3" FontSize="14" Margin="20,0,0,0" VerticalAlignment="Center" Foreground="White"/>
-                    </StackPanel>
-                </Button>
+                <StackPanel Grid.Row="2">
+                    <Button Style="{StaticResource BotónMenuModerno}" Click="Menu_Dashboard_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Imagenes/dashboard.png" Width="30" Height="30" VerticalAlignment="Center"/>
+                            <TextBlock Text="Dashboard" FontSize="14" Margin="18,0,0,0" Foreground="White" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
 
-                <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Height="50" HorizontalContentAlignment="Left" Click="Menu_Algoritmo_Click">
-                    <StackPanel Orientation="Horizontal" Margin="15,0,0,0">
-                        <TextBlock Text="⚡" FontSize="20" VerticalAlignment="Center" Foreground="White"/>
-                        <TextBlock Text="Opcion 4" FontSize="14" Margin="20,0,0,0" VerticalAlignment="Center" Foreground="White"/>
-                    </StackPanel>
-                </Button>
+                    <Button Style="{StaticResource BotónMenuModerno}" Click="Menu_Censos_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Imagenes/beneficiarios.png" Width="30" Height="30" VerticalAlignment="Center"/>
+                            <TextBlock Text="Beneficiarios" FontSize="14" Margin="18,0,0,0" Foreground="White" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
 
-                <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Height="50" HorizontalContentAlignment="Left" Click="Menu_Configuracion_Click">
-                    <StackPanel Orientation="Horizontal" Margin="15,0,0,0">
-                        <TextBlock Text="⚙️" FontSize="20" VerticalAlignment="Center" Foreground="White"/>
-                        <TextBlock Text="Configuración" FontSize="14" Margin="20,0,0,0" VerticalAlignment="Center" Foreground="White"/>
-                    </StackPanel>
-                </Button>
+                    <Button Style="{StaticResource BotónMenuModerno}" Click="Menu_Mapa_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Imagenes/mapa.png" Width="30" Height="30" VerticalAlignment="Center"/>
+                            <TextBlock Text="Mapa de Riesgo" FontSize="14" Margin="18,0,0,0" Foreground="White" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
 
-            </StackPanel>
+                    <Button Style="{StaticResource BotónMenuModerno}" Click="Menu_Algoritmo_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Imagenes/personas.png" Width="30" Height="30" VerticalAlignment="Center"/>
+                            <TextBlock Text="Algoritmo de Priorización" FontSize="14" Margin="18,0,0,0" Foreground="White" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource BotónMenuModerno}" Click="Menu_Configuracion_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Imagenes/configuracion.png" Width="30" Height="30" VerticalAlignment="Center"/>
+                            <TextBlock Text="Configuración" FontSize="14" Margin="18,0,0,0" Foreground="White" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Margin="0,0,0,20">
+                    <Separator Background="#334155" Margin="0,0,0,10"/>
+                    <Grid Margin="15,5,15,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Border Grid.Column="0" Width="30" Height="30" CornerRadius="15" Background="#334155" BorderBrush="#3B82F6" BorderThickness="1.5">
+                            <Image Source="/Imagenes/usuario.png" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel x:Name="UserInfoPanel" Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" Visibility="Collapsed">
+                            <TextBlock Text="Operador" FontSize="12" FontWeight="SemiBold" Foreground="White"/>
+                            <TextBlock Text="Administrador" FontSize="10" Foreground="#94A3B8"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Button x:Name="BtnCerrarSesionIntegrado" Content="Cerrar Sesión" 
+        Margin="15,8,15,0" Height="32" Foreground="White" FontWeight="Medium" 
+        FontSize="12" Cursor="Hand" Visibility="Collapsed" Click="MenuItem_CerrarSesion_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bgBtnCerrar" Background="#EF4444" CornerRadius="6" Padding="5,0">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bgBtnCerrar" Property="Background" Value="#DC2626"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter TargetName="bgBtnCerrar" Property="Background" Value="#475569"/>
+                                        <Setter Property="Foreground" Value="#94A3B8"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Grid>
         </Grid>
 
-        <Grid Grid.Column="1" Margin="20">
-            <ContentControl x:Name="PanelCentral">
-                <TextBlock Text="Bienvenido a HabitAR. Seleccioná una opción del menú." 
-                           FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#334155"/>
-            </ContentControl>
+        <Grid Grid.Column="1">
+            <ContentControl x:Name="PanelCentral" Margin="20"/>
+
+            <StackPanel x:Name="panelCierreCarga" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Height="4" Width="200" Background="#334155" Foreground="#3B82F6" Margin="0,0,0,10"/>
+                <TextBlock Text="Cerrando sesión..." FontSize="16" Foreground="#334155" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>
-    

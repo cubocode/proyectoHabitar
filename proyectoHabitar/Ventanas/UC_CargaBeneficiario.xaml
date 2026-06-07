@@ -1,0 +1,284 @@
+﻿<UserControl x:Class="proyectoHabitar.Ventanas.UC_CargaBeneficiario"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:proyectoHabitar.Ventanas"
+             mc:Ignorable="d" 
+             d:DesignHeight="950" d:DesignWidth="800">
+
+    <Grid Background="#F5F6F8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#1E293B" Padding="25,20" CornerRadius="0,0,10,10" Margin="0,0,0,15">
+            <StackPanel>
+                <TextBlock Text="Gestión Territorial - Relevamientos" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Carga de datos del beneficiario titular, grupo familiar, vivienda previa e infraestructura sanitaria." FontSize="13" Foreground="#94A3B8" Margin="0,3,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,0,20,20">
+            <StackPanel>
+
+                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="👤 Datos del Beneficiario Titular" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Nro Documento (DNI)" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtTitularDni" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                <TextBlock Text="Nro de CUIL (Sin guiones)" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtTitularCuil" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Fecha de Nacimiento" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <DatePicker x:Name="dpTitularFechaNac" Height="32" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Apellido y Nombres Completos" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtTitularNombre" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Identidad de Género" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbTitularGenero" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Varón"/>
+                                    <ComboBoxItem Content="Mujer"/>
+                                    <ComboBoxItem Content="Varón trans"/>
+                                    <ComboBoxItem Content="Mujer trans / Travesti"/>
+                                    <ComboBoxItem Content="No binarie"/>
+                                    <ComboBoxItem Content="Otro"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Estado Civil" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbTitularEstadoCivil" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Soltero/a"/>
+                                    <ComboBoxItem Content="Casado/a"/>
+                                    <ComboBoxItem Content="Unión de Hecho"/>
+                                    <ComboBoxItem Content="Divorciado/a"/>
+                                    <ComboBoxItem Content="Viudo/a"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Nivel Educativo Máximo Alcanzado" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbTitularNivelEducativo" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Sin Instrucción"/>
+                                    <ComboBoxItem Content="Primario Completo"/>
+                                    <ComboBoxItem Content="Primario Incompleto"/>
+                                    <ComboBoxItem Content="Secundario Completo"/>
+                                    <ComboBoxItem Content="Secundario Incompleto"/>
+                                    <ComboBoxItem Content="Terciario/Universitario"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="💵 Situación Económica y Laboral" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Condición Laboral" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbTitularCondicionLaboral" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Trabajo Formal"/>
+                                    <ComboBoxItem Content="Informal/Changa"/>
+                                    <ComboBoxItem Content="Desempleado"/>
+                                    <ComboBoxItem Content="Jubilado/Pensionado"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                <TextBlock Text="Ingresos Mensuales Estimados ($)" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtTitularIngresos" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1" Text="0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="¿Recibe algún Plan Social?" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbTitularPlanSocial" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="No posee"/>
+                                    <ComboBoxItem Content="MDS (Ministerio Desarrollo)"/>
+                                    <ComboBoxItem Content="MTEySS (Trabajo)"/>
+                                    <ComboBoxItem Content="Otros Subsidios"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="👨‍👩‍👧‍👦 Composición del Grupo Familiar Conviviente" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Total Integrantes del Hogar" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtCantConvivientes" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1" Text="1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                <TextBlock Text="Cantidad Hijos Menores (0-17)" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtCantHijos" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1" Text="0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Cantidad Adultos Mayores (+65)" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtCantAdultosMayores" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1" Text="0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel>
+                            <TextBlock Text="Vulnerabilidad por Motivos de Salud" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <CheckBox x:Name="chkDiscapacidad" Content="¿Algún miembro de la familia presenta dificultades o limitaciones motrices/discapacidad?" FontSize="13" Foreground="#1E293B" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="🛖 Vivienda Original Afectada e Infraestructura Previa" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Tipo de Vivienda Afectada" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbTipoVivienda" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Casa"/>
+                                    <ComboBoxItem Content="Rancho"/>
+                                    <ComboBoxItem Content="Casilla"/>
+                                    <ComboBoxItem Content="Pieza ocupada en inquilinato"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Régimen de Tenencia del Terreno" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbTenenciaTerreno" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Propio con Escritura"/>
+                                    <ComboBoxItem Content="Propio con Boleto Compra-Venta"/>
+                                    <ComboBoxItem Content="Prestado / Cedido por trabajo"/>
+                                    <ComboBoxItem Content="Ocupación Informal"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Material Predominante del Piso" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbMaterialPiso" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Cerámica / Baldosa / Madera"/>
+                                    <ComboBoxItem Content="Carpeta / Contrapiso"/>
+                                    <ComboBoxItem Content="Tierra / Ladrillo suelto"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Material Predominante del Techo" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbMaterialTecho" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Losa / Teja / Chapa con cielorraso"/>
+                                    <ComboBoxItem Content="Chapa de metal simple"/>
+                                    <ComboBoxItem Content="Chapa de cartón / Caña / Paja con barro"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Procedencia del Agua para beber/cocinar" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbProcedenciaAgua" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Red pública (Agua corriente)"/>
+                                    <ComboBoxItem Content="Perforación con bomba (motor/manual)"/>
+                                    <ComboBoxItem Content="Pozo sin bomba / Cisterna / Agua de lluvia / Río"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Desagüe / Sistema del Inodoro" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cmbDesagueInodoro" Height="32" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="A red pública (Cloaca)"/>
+                                    <ComboBoxItem Content="A cámara séptica y pozo ciego"/>
+                                    <ComboBoxItem Content="A hoyo o excavación en tierra / No tiene baño"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,10">
+                    <Button x:Name="btnLimpiar" Content="Volver al Padrón" Width="140" Height="38" 
+                            Background="Transparent" Foreground="#64748B" BorderThickness="0" Margin="0,0,15,0" 
+                            Cursor="Hand" Click="btnLimpiar_Click"/>
+
+                    <Button x:Name="btnGuardarCenso" Content="💾 Guardar Relevamiento" Width="190" Height="38" 
+                            Background="#3B82F6" Foreground="White" FontWeight="Bold" BorderThickness="0" 
+                            Cursor="Hand" Click="btnGuardarCenso_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

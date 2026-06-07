@@ -8,11 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Imagenes\beneficiarios.png" />
+    <None Remove="Imagenes\configuracion.png" />
+    <None Remove="Imagenes\dashboard.png" />
+    <None Remove="Imagenes\logo.png" />
+    <None Remove="Imagenes\mapa.png" />
+    <None Remove="Imagenes\personas.png" />
+    <None Remove="Imagenes\usuario.png" />
     <None Remove="Ventanas\logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Imagenes\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Imagenes\beneficiarios.png" />
+    <Resource Include="Imagenes\configuracion.png" />
+    <Resource Include="Imagenes\dashboard.png" />
+    <Resource Include="Imagenes\logo.png" />
+    <Resource Include="Imagenes\mapa.png" />
+    <Resource Include="Imagenes\personas.png" />
+    <Resource Include="Imagenes\usuario.png" />
     <Resource Include="Ventanas\logo.png" />
   </ItemGroup>
 

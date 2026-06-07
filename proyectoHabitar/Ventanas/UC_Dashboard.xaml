@@ -5,16 +5,130 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:proyectoHabitar.Ventanas"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="600">
+             d:DesignHeight="600" d:DesignWidth="800">
     <Grid Background="#F5F6F8">
-        <StackPanel Margin="30">
-            <TextBlock Text="Dashboard" FontSize="26" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,5"/>
-            <TextBlock Text="Panel con gráficos estadisticos" FontSize="14" Foreground="#64748B" Margin="0,0,0,30"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="25">
+                <TextBlock Text="Dashboard General" FontSize="26" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,2"/>
+                <TextBlock Text="Panel de control e indicadores del Sistema HabitAR" FontSize="13" Foreground="#64748B" Margin="0,0,0,25"/>
 
-            <WrapPanel>
-               
+                <UniformGrid Columns="4" Margin="0,0,0,25">
+                    <Border Background="White" CornerRadius="8" Margin="0,0,12,0" Padding="15" BorderBrush="#E2E8F0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Total Censados" FontSize="11" FontWeight="SemiBold" Foreground="#64748B"/>
+                            <TextBlock Text="1,248" FontSize="22" FontWeight="Bold" Foreground="#1E293B" Margin="0,5"/>
+                            <TextBlock Text="▲ 12% este mes" FontSize="11" Foreground="#10B981" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Border>
 
-            </WrapPanel>
-        </StackPanel>
+                    <Border Background="White" CornerRadius="8" Margin="0,0,12,0" Padding="15" BorderBrush="#E2E8F0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Vulnerabilidad Alta" FontSize="11" FontWeight="SemiBold" Foreground="#64748B"/>
+                            <TextBlock Text="412" FontSize="22" FontWeight="Bold" Foreground="#EF4444" Margin="0,5"/>
+                            <TextBlock Text="Requieren prioridad" FontSize="11" Foreground="#64748B"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="White" CornerRadius="8" Margin="0,0,12,0" Padding="15" BorderBrush="#E2E8F0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Áreas Relevadas" FontSize="11" FontWeight="SemiBold" Foreground="#64748B"/>
+                            <TextBlock Text="34" FontSize="22" FontWeight="Bold" Foreground="#F59E0B" Margin="0,5"/>
+                            <TextBlock Text="Asentamientos y barrios" FontSize="11" Foreground="#64748B"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="White" CornerRadius="8" Margin="0,0,0,0" Padding="15" BorderBrush="#E2E8F0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Censores Activos" FontSize="11" FontWeight="SemiBold" Foreground="#64748B"/>
+                            <TextBlock Text="18" FontSize="22" FontWeight="Bold" Foreground="#6366F1" Margin="0,5"/>
+                            <TextBlock Text="En campo hoy" FontSize="11" Foreground="#6366F1" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Background="White" CornerRadius="8" Margin="0,0,15,0" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Evolución de Censos Semanales" FontSize="14" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,20"/>
+
+                            <Grid Height="160" VerticalAlignment="Bottom">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                                    <Border Background="#3B82F6" Width="30" Height="70" CornerRadius="4,4,0,0"/>
+                                    <TextBlock Text="Sem 1" FontSize="11" Foreground="#64748B" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                                    <Border Background="#3B82F6" Width="30" Height="110" CornerRadius="4,4,0,0"/>
+                                    <TextBlock Text="Sem 2" FontSize="11" Foreground="#64748B" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                                    <Border Background="#10B981" Width="30" Height="140" CornerRadius="4,4,0,0"/>
+                                    <TextBlock Text="Sem 3" FontSize="11" Foreground="#64748B" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="3" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                                    <Border Background="#3B82F6" Width="30" Height="95" CornerRadius="4,4,0,0"/>
+                                    <TextBlock Text="Sem 4" FontSize="11" Foreground="#64748B" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="4" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                                    <Border Background="#6366F1" Width="30" Height="125" CornerRadius="4,4,0,0"/>
+                                    <TextBlock Text="Sem 5" FontSize="11" Foreground="#64748B" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Distribución por Riesgo" FontSize="14" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+
+                            <Grid Height="120" Margin="0,5,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" Width="100" Height="100" HorizontalAlignment="Center">
+                                    <Ellipse Stroke="#EF4444" StrokeThickness="14" Width="90" Height="90"/>
+                                    <Ellipse Stroke="#F59E0B" StrokeThickness="14" Width="90" Height="90" StrokeDashArray="3,1" StrokeDashOffset="2"/>
+                                    <Ellipse Stroke="#3B82F6" StrokeThickness="14" Width="90" Height="90" StrokeDashArray="1.5,4" StrokeDashOffset="0.5"/>
+                                    <TextBlock Text="Riesgo" FontSize="11" FontWeight="SemiBold" Foreground="#64748B" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Grid>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0,0,0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <Ellipse Width="8" Height="8" Fill="#EF4444"/>
+                                        <TextBlock Text="Alto (42%)" FontSize="11" Foreground="#1E293B" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <Ellipse Width="8" Height="8" Fill="#F59E0B"/>
+                                        <TextBlock Text="Medio (33%)" FontSize="11" Foreground="#1E293B" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <Ellipse Width="8" Height="8" Fill="#3B82F6"/>
+                                        <TextBlock Text="Bajo (25%)" FontSize="11" Foreground="#1E293B" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>
