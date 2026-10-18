@@ -2,11 +2,14 @@ using proyectoHabitar.Modelos;
 
 namespace proyectoHabitar.Servicios
 {
-    /// <summary>Usuario que inició sesión. Se completa con la respuesta del login y se limpia al cerrar sesión.</summary>
+    /// <summary>
+    /// Usuario que inició sesión. Se completa con la respuesta del login y se limpia al cerrar sesión.
+    /// Roles: Administrador (todo) y Encuestador (sin Fondos ni Configuración).
+    /// </summary>
     public static class Sesion
     {
         public const string RolAdministrador = "Administrador";
-        public const string RolLogistica = "Logística";
+        public const string RolEncuestador = "Encuestador";
 
         public static LoginResponse? Usuario { get; private set; }
 
@@ -16,8 +19,6 @@ namespace proyectoHabitar.Servicios
         public static string Rol => Usuario?.Rol ?? "";
 
         public static bool EsAdministrador => Rol == RolAdministrador;
-
-        public static bool PuedeVerFondos => EsAdministrador || Rol == RolLogistica;
 
         public static void Iniciar(LoginResponse datos)
         {

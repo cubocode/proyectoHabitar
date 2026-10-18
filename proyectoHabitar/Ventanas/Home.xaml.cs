@@ -20,9 +20,16 @@ namespace proyectoHabitar.Ventanas
             txtUsuarioRol.Text = string.IsNullOrEmpty(Sesion.Rol) ? "Sin rol asignado" : Sesion.Rol;
             Title = $"HabitAR - Sistema de Gestión  ·  {Sesion.NombreCompleto} ({Sesion.Rol})";
 
-            // Permisos por rol (el servidor también los valida).
-            btnMenuConfiguracion.Visibility = Sesion.EsAdministrador ? Visibility.Visible : Visibility.Collapsed;
-            btnMenuFondos.Visibility = Sesion.PuedeVerFondos ? Visibility.Visible : Visibility.Collapsed;
+            // Permisos por rol (el servidor también los valida): el Encuestador ve Fondos y Configuración bloqueados.
+            if (!Sesion.EsAdministrador)
+            {
+                foreach (var (boton, candado) in new[] { (btnMenuFondos, lblCandadoFondos), (btnMenuConfiguracion, lblCandadoConfiguracion) })
+                {
+                    boton.Opacity = 0.45;
+                    boton.ToolTip = "🔒 Solo disponible para Administradores";
+                    candado.Visibility = Visibility.Visible;
+                }
+            }
 
             // Inicia mostrando el Dashboard automáticamente en pantalla
             PanelCentral.Content = new UC_Dashboard();
@@ -112,19 +119,25 @@ namespace proyectoHabitar.Ventanas
             Navegar(new UC_MapaRiesgo());
         }
 
-        private void Menu_Algoritmo_Click(object sender, RoutedEventArgs e)
-        {
-            MensajeBox.Mostrar("El módulo de Algoritmo de Priorización todavía está en desarrollo.", "Próximamente", MensajeBox.TipoMensaje.Info);
-        }
-
         private void Menu_Fondos_Click(object sender, RoutedEventArgs e)
         {
+            if (!VerificarAdministrador("Fondos")) return;
             Navegar(new UC_Fondos());
         }
 
         private void Menu_Configuracion_Click(object sender, RoutedEventArgs e)
         {
+            if (!VerificarAdministrador("Configuración")) return;
             Navegar(new UC_Configuracion());
+        }
+
+        private static bool VerificarAdministrador(string modulo)
+        {
+            if (Sesion.EsAdministrador) return true;
+
+            MensajeBox.Mostrar($"El módulo {modulo} está bloqueado para tu rol ({Sesion.Rol}).\n\nSolo los Administradores pueden acceder.",
+                               "Acceso restringido", MensajeBox.TipoMensaje.Warning);
+            return false;
         }
     }
 }

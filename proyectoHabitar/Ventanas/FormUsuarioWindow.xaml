@@ -39,7 +39,6 @@
                 <ComboBox x:Name="cmbRol" Background="#0F172A" Height="30" VerticalContentAlignment="Center">
                     <ComboBoxItem Content="Administrador"/>
                     <ComboBoxItem Content="Encuestador"/>
-                    <ComboBoxItem Content="Logística"/>
                 </ComboBox>
 
                 <StackPanel x:Name="PanelActivo" Visibility="Collapsed" Margin="0,15,0,0">

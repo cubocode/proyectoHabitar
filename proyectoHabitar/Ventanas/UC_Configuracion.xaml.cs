@@ -27,28 +27,6 @@ namespace proyectoHabitar.Ventanas
             GridMenuConfig.Visibility = Visibility.Visible;
         }
 
-        private async void btnRecalcular_Click(object sender, RoutedEventArgs e)
-        {
-            bool seguro = MensajeBox.Mostrar("Se va a recalcular el puntaje y el color de semáforo de TODAS las fichas con el algoritmo vigente.\n\n¿Continuar?",
-                                             "Recalcular puntajes", MensajeBox.TipoMensaje.QuerySiNo);
-            if (!seguro) return;
-
-            btnRecalcular.IsEnabled = false;
-            try
-            {
-                RespuestaApi r = await ApiClient.PostAsync("api/Beneficiarios/recalcular-puntajes", null);
-                MensajeBox.Mostrar(r.Mensaje, "Recalcular puntajes", MensajeBox.TipoMensaje.Info);
-            }
-            catch (ApiException ex)
-            {
-                MensajeBox.Mostrar(ex.Message, "Error", MensajeBox.TipoMensaje.Error);
-            }
-            finally
-            {
-                btnRecalcular.IsEnabled = true;
-            }
-        }
-
         private async Task CargarUsuariosGrid()
         {
             try

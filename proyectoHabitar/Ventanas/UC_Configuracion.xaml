@@ -48,15 +48,6 @@
                             <TextBlock Text="Gestión Usuarios" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-
-                    <Button x:Name="btnRecalcular" Style="{StaticResource TarjetaConfig}" Click="btnRecalcular_Click"
-                            ToolTip="Vuelve a calcular puntaje y semáforo de todo el padrón con el algoritmo vigente.">
-                        <StackPanel>
-                            <TextBlock Text="🔄" FontSize="28" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                            <TextBlock Text="Recalcular puntajes" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                            <TextBlock Text="de todo el padrón" FontSize="11" Foreground="#94A3B8" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
                 </WrapPanel>
             </StackPanel>
         </Grid>
