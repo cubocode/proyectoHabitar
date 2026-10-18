@@ -1,0 +1,291 @@
+<UserControl x:Class="proyectoHabitar.Ventanas.UC_Fondos"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="1100"
+             Loaded="UserControl_Loaded">
+
+    <UserControl.Resources>
+        <Style x:Key="BotonAccion" TargetType="Button">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Margin" Value="8,0,0,0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="fondo" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="fondo" Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="fondo" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BotonPeriodo" TargetType="Button">
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="Padding" Value="8,0"/>
+            <Setter Property="Margin" Value="0,0,4,0"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#334155"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style x:Key="EtiquetaFiltro" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="Margin" Value="0,0,0,3"/>
+        </Style>
+
+        <Style x:Key="TituloTarjeta" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="#F5F6F8">
+        <Grid Margin="25,20,25,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Encabezado y acciones -->
+            <Grid Grid.Row="0" Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Fondos — Caja" FontSize="24" FontWeight="Bold" Foreground="#1E293B"/>
+                    <TextBlock Text="Registro de ingresos y egresos de dinero del programa." FontSize="13" Foreground="#64748B"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="btnIngreso" Style="{StaticResource BotonAccion}" Background="#10B981" Content="➕ Registrar ingreso" Click="btnIngreso_Click"/>
+                    <Button x:Name="btnEgreso" Style="{StaticResource BotonAccion}" Background="#EF4444" Content="➖ Registrar egreso" Click="btnEgreso_Click"/>
+                    <Button x:Name="btnEditar" Style="{StaticResource BotonAccion}" Background="#F59E0B" Content="✏️ Editar" Click="btnEditar_Click"/>
+                    <Button x:Name="btnAnular" Style="{StaticResource BotonAccion}" Background="#475569" Content="⛔ Anular" Click="btnAnular_Click"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Tarjetas de resumen -->
+            <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,15">
+                <Border Background="#1E293B" CornerRadius="8" Margin="0,0,12,0" Padding="15">
+                    <StackPanel>
+                        <TextBlock Text="Saldo actual en caja" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8"/>
+                        <TextBlock x:Name="lblSaldoActual" Text="$ 0,00" FontSize="22" FontWeight="Bold" Foreground="White" Margin="0,5,0,0"/>
+                        <TextBlock Text="Todos los movimientos vigentes" FontSize="11" Foreground="#94A3B8"/>
+                    </StackPanel>
+                </Border>
+                <Border Background="White" CornerRadius="8" Margin="0,0,12,0" Padding="15" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Ingresos del período" Style="{StaticResource TituloTarjeta}"/>
+                        <TextBlock x:Name="lblIngresos" Text="$ 0,00" FontSize="22" FontWeight="Bold" Foreground="#10B981" Margin="0,5,0,0"/>
+                        <TextBlock x:Name="lblCantIngresos" Text="0 movimientos" FontSize="11" Foreground="#64748B"/>
+                    </StackPanel>
+                </Border>
+                <Border Background="White" CornerRadius="8" Margin="0,0,12,0" Padding="15" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Egresos del período" Style="{StaticResource TituloTarjeta}"/>
+                        <TextBlock x:Name="lblEgresos" Text="$ 0,00" FontSize="22" FontWeight="Bold" Foreground="#EF4444" Margin="0,5,0,0"/>
+                        <TextBlock x:Name="lblCantEgresos" Text="0 movimientos" FontSize="11" Foreground="#64748B"/>
+                    </StackPanel>
+                </Border>
+                <Border Background="White" CornerRadius="8" Padding="15" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Saldo al cierre del período" Style="{StaticResource TituloTarjeta}"/>
+                        <TextBlock x:Name="lblSaldoFinal" Text="$ 0,00" FontSize="22" FontWeight="Bold" Foreground="#1E293B" Margin="0,5,0,0"/>
+                        <TextBlock x:Name="lblSaldoAnterior" Text="Saldo anterior: $ 0,00" FontSize="11" Foreground="#64748B"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- Filtros y reportes -->
+            <Border Grid.Row="2" Background="White" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" Padding="12" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <WrapPanel Grid.Row="0" Orientation="Horizontal">
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock Text="Desde" Style="{StaticResource EtiquetaFiltro}"/>
+                            <DatePicker x:Name="dpDesde" Width="120" SelectedDateChanged="Filtro_Changed"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock Text="Hasta" Style="{StaticResource EtiquetaFiltro}"/>
+                            <DatePicker x:Name="dpHasta" Width="120" SelectedDateChanged="Filtro_Changed"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock Text="Tipo" Style="{StaticResource EtiquetaFiltro}"/>
+                            <ComboBox x:Name="cmbTipo" Width="100" Height="25" SelectedIndex="0" SelectionChanged="Filtro_Changed">
+                                <ComboBoxItem Content="Todos"/>
+                                <ComboBoxItem Content="Ingreso"/>
+                                <ComboBoxItem Content="Egreso"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock Text="Categoría" Style="{StaticResource EtiquetaFiltro}"/>
+                            <ComboBox x:Name="cmbCategoria" Width="180" Height="25" SelectionChanged="Filtro_Changed"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock Text="Buscar (concepto, detalle, comprobante, usuario)" Style="{StaticResource EtiquetaFiltro}"/>
+                            <TextBox x:Name="txtBuscar" Width="250" Height="25" VerticalContentAlignment="Center" TextChanged="txtBuscar_TextChanged"/>
+                        </StackPanel>
+                        <CheckBox x:Name="chkAnulados" Content="Mostrar anulados" VerticalAlignment="Bottom" Margin="0,0,0,5" FontSize="12"
+                                  Checked="Filtro_Changed" Unchecked="Filtro_Changed"/>
+                    </WrapPanel>
+
+                    <Grid Grid.Row="1" Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel VerticalAlignment="Center">
+                            <TextBlock Text="Período rápido:" FontSize="11" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <Button Content="Hoy" Style="{StaticResource BotonPeriodo}" Tag="hoy" Click="Periodo_Click"/>
+                            <Button Content="Últimos 7 días" Style="{StaticResource BotonPeriodo}" Tag="7dias" Click="Periodo_Click"/>
+                            <Button Content="Este mes" Style="{StaticResource BotonPeriodo}" Tag="mes" Click="Periodo_Click"/>
+                            <Button Content="Mes anterior" Style="{StaticResource BotonPeriodo}" Tag="mesAnterior" Click="Periodo_Click"/>
+                            <Button Content="Este año" Style="{StaticResource BotonPeriodo}" Tag="anio" Click="Periodo_Click"/>
+                            <Button Content="Todo" Style="{StaticResource BotonPeriodo}" Tag="todo" Click="Periodo_Click"/>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button x:Name="btnPdf" Style="{StaticResource BotonAccion}" Background="#3B82F6" Height="28" Content="📄 Reporte PDF" Click="btnPdf_Click"/>
+                            <Button x:Name="btnImprimir" Style="{StaticResource BotonAccion}" Background="#334155" Height="28" Content="🖨️ Imprimir" Click="btnImprimir_Click"/>
+                            <Button x:Name="btnExcel" Style="{StaticResource BotonAccion}" Background="#15803D" Height="28" Content="📊 Excel (CSV)" Click="btnExcel_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- Grilla + totales por categoría -->
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="250"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Background="White" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" Padding="8" Margin="0,0,15,0">
+                    <DataGrid x:Name="dgMovimientos" Background="Transparent" BorderThickness="0" RowBackground="White"
+                              AlternatingRowBackground="#F8FAFC" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#E2E8F0"
+                              IsReadOnly="True" AutoGenerateColumns="False" SelectionMode="Single" HeadersVisibility="Column"
+                              MouseDoubleClick="dgMovimientos_MouseDoubleClick">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Anulado}" Value="True">
+                                        <Setter Property="Foreground" Value="#94A3B8"/>
+                                        <Setter Property="FontStyle" Value="Italic"/>
+                                        <Setter Property="ToolTip" Value="{Binding MotivoAnulacion}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Fecha" Width="85" Binding="{Binding FechaHora, StringFormat=\{0:dd/MM/yyyy\}}"/>
+                            <DataGridTextColumn Header="Hora" Width="50" Binding="{Binding FechaHora, StringFormat=\{0:HH:mm\}}"/>
+                            <DataGridTemplateColumn Header="Tipo" Width="80">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock x:Name="txtTipo" Text="{Binding Tipo}" FontWeight="SemiBold" Foreground="#EF4444" VerticalAlignment="Center"/>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding EsIngreso}" Value="True">
+                                                <Setter TargetName="txtTipo" Property="Foreground" Value="#10B981"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Anulado}" Value="True">
+                                                <Setter TargetName="txtTipo" Property="Foreground" Value="#94A3B8"/>
+                                                <Setter TargetName="txtTipo" Property="TextDecorations" Value="Strikethrough"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Categoría" Width="1.2*" Binding="{Binding Categoria}"/>
+                            <DataGridTextColumn Header="Concepto" Width="1.6*" Binding="{Binding Concepto}"/>
+                            <DataGridTextColumn Header="Detalle" Width="1.6*" Binding="{Binding Detalle}"/>
+                            <DataGridTextColumn Header="Medio" Width="*" Binding="{Binding MedioPago}"/>
+                            <DataGridTextColumn Header="Comprob." Width="75" Binding="{Binding Comprobante}"/>
+                            <DataGridTemplateColumn Header="Monto" Width="110" SortMemberPath="MontoConSigno">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock x:Name="txtMonto" Text="{Binding MontoConSigno, StringFormat=C2}" FontWeight="SemiBold" Foreground="#EF4444"
+                                                   HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding EsIngreso}" Value="True">
+                                                <Setter TargetName="txtMonto" Property="Foreground" Value="#10B981"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Anulado}" Value="True">
+                                                <Setter TargetName="txtMonto" Property="Foreground" Value="#94A3B8"/>
+                                                <Setter TargetName="txtMonto" Property="TextDecorations" Value="Strikethrough"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Registró" Width="*" Binding="{Binding UsuarioNombre}"/>
+                            <DataGridTextColumn Header="Estado" Width="70" Binding="{Binding Estado}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+
+                <Border Grid.Column="1" Background="White" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" Padding="15">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top" Text="TOTALES POR CATEGORÍA" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,10"/>
+                        <TextBlock x:Name="lblSinCategorias" DockPanel.Dock="Top" Text="Sin movimientos en el período." FontSize="12" Foreground="#94A3B8" Visibility="Collapsed"/>
+                        <ItemsControl x:Name="lstCategorias">
+                            <ItemsControl.Template>
+                                <ControlTemplate TargetType="ItemsControl">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </ControlTemplate>
+                            </ItemsControl.Template>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse x:Name="punto" Width="9" Height="9" Fill="#EF4444" Margin="0,4,8,0" VerticalAlignment="Top"/>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="{Binding Categoria}" FontSize="12" Foreground="#1E293B" TextWrapping="Wrap"/>
+                                            <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="#334155">
+                                                <Run Text="{Binding Total, Mode=OneWay, StringFormat=C2}"/><Run Text="  ·  " Foreground="#94A3B8"/><Run Text="{Binding Cantidad, Mode=OneWay}" Foreground="#94A3B8"/><Run Text=" mov." Foreground="#94A3B8"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Tipo}" Value="Ingreso">
+                                            <Setter TargetName="punto" Property="Fill" Value="#10B981"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DockPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -79,12 +79,13 @@
                         <DataGridTextColumn Header="Fecha Relev." Width="105" Binding="{Binding FechaRelevamiento, StringFormat=\{0:dd/MM/yyyy\}}"/>
                         <DataGridTextColumn Header="Nombre Titular" Width="1.8*" Binding="{Binding Nombre}"/>
                         <DataGridTextColumn Header="DNI" Width="1*" Binding="{Binding Dni}"/>
-                        <DataGridTextColumn Header="Domicilio / Localización" Width="2.2*" Binding="{Binding Domicilio}"/>
+                        <DataGridTextColumn Header="Domicilio / Localización" Width="2.2*" Binding="{Binding DomicilioCompleto}"/>
+                        <DataGridTextColumn Header="Puntaje" Width="70" Binding="{Binding PuntajeCriticidad}"/>
 
                         <DataGridTemplateColumn Header="Prioridad" Width="140">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
                                         <Ellipse x:Name="dotSemaforo" Width="12" Height="12" Fill="#94A3B8" Margin="0,0,8,0"/>
                                         <TextBlock x:Name="txtPrioridad" Text="{Binding ColorSemaforo}" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                     </StackPanel>
@@ -111,7 +112,7 @@
         </Grid>
 
         <Grid x:Name="ModalDetalle" Background="#80000000" Visibility="Collapsed">
-            <Border Background="#F8FAFC" Width="740" Height="490" CornerRadius="12" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="#CBD5E1" BorderThickness="1.5">
+            <Border x:Name="FichaContenedor" Background="#F8FAFC" Width="740" Height="490" CornerRadius="12" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="#CBD5E1" BorderThickness="1.5">
                 <Grid Margin="20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -152,9 +153,15 @@
                                     <TextBlock Text="🗺️" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                                     <TextBlock Text="Google Maps" FontSize="14" FontWeight="Bold" Foreground="#475569" HorizontalAlignment="Center"/>
                                     <TextBlock x:Name="txtModalDireccionMapa" Text="Cargando localización..." FontSize="11" Foreground="#64748B" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,5,0,0" TextWrapping="Wrap"/>
-                                    <Border Background="#64748B" CornerRadius="4" Padding="8,4" Margin="0,15,0,0" HorizontalAlignment="Center">
-                                        <TextBlock Text="Módulo Pre-Cargado" FontSize="10" FontWeight="Bold" Foreground="White"/>
-                                    </Border>
+                                    <TextBlock x:Name="txtModalCoordenadas" Text="" FontSize="10" Foreground="#94A3B8" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                    <Button x:Name="btnAbrirGoogleMaps" Content="📍 Abrir en Google Maps" Margin="0,15,0,0" Padding="10,5" HorizontalAlignment="Center"
+                                            Background="#3B82F6" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand" Click="btnAbrirGoogleMaps_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="4"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -168,13 +175,7 @@
                                 </Style>
                             </Button.Resources>
                         </Button>
-                        <Button x:Name="btnImprimirFicha" Content="🖨️ Imprimir Ficha" Height="32" Width="120" Margin="0,0,8,0" Background="#3B82F6" Foreground="White" FontWeight="SemiBold" Cursor="Hand" Click="btnImprimirFicha_Click">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="4"/>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
+
                         <Button Content="Cerrar Ficha" Height="32" Width="100" Background="#334155" Foreground="White" FontWeight="Medium" Cursor="Hand" Click="btnCerrarModal_Click">
                             <Button.Resources>
                                 <Style TargetType="Border">

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using proyectoHabitar.Servicios;
 
 namespace proyectoHabitar.Ventanas
 {
@@ -13,6 +14,15 @@ namespace proyectoHabitar.Ventanas
         public Home()
         {
             InitializeComponent();
+
+            // Datos reales del usuario logueado (antes decía "Operador / Administrador" fijo).
+            txtUsuarioNombre.Text = Sesion.NombreCompleto;
+            txtUsuarioRol.Text = string.IsNullOrEmpty(Sesion.Rol) ? "Sin rol asignado" : Sesion.Rol;
+            Title = $"HabitAR - Sistema de Gestión  ·  {Sesion.NombreCompleto} ({Sesion.Rol})";
+
+            // Permisos por rol (el servidor también los valida).
+            btnMenuConfiguracion.Visibility = Sesion.EsAdministrador ? Visibility.Visible : Visibility.Collapsed;
+            btnMenuFondos.Visibility = Sesion.PuedeVerFondos ? Visibility.Visible : Visibility.Collapsed;
 
             // Inicia mostrando el Dashboard automáticamente en pantalla
             PanelCentral.Content = new UC_Dashboard();
@@ -54,50 +64,67 @@ namespace proyectoHabitar.Ventanas
 
         private async void MenuItem_CerrarSesion_Click(object sender, RoutedEventArgs e)
         {
-            // Disparamos tu MensajeBox personalizado de HabitAR con el formato Sí/No
             bool seguro = MensajeBox.Mostrar("¿Estás seguro de que querés cerrar sesión?", "Cerrar Sesión", MensajeBox.TipoMensaje.QuerySiNo);
 
             if (seguro)
             {
                 // Congelamos el entorno del Home e iniciamos la carga de salida
+                PanelCentral.Content = null;
                 PanelCentral.Visibility = Visibility.Collapsed;
                 GridMenuLateral.IsEnabled = false;
 
                 panelCierreCarga.Visibility = Visibility.Visible;
 
-                // Espera asíncrona simulada de 2.2 segundos
                 await Task.Delay(2200);
 
-                // Destruimos la ventana y volvemos al Login
-                proyectoHabitar.Ventanas.Login ventanaLogin = new proyectoHabitar.Ventanas.Login();
+                Sesion.Cerrar();
+
+                Login ventanaLogin = new Login();
                 ventanaLogin.Show();
                 this.Close();
             }
         }
 
+        public void Navegar(UserControl pantalla)
+        {
+            PanelCentral.Content = pantalla;
+        }
+
+        /// <summary>Permite que una pantalla hija cambie el contenido central (ej.: padrón → ficha).</summary>
+        public static void NavegarDesde(DependencyObject origen, UserControl destino)
+        {
+            if (Window.GetWindow(origen) is Home home)
+                home.Navegar(destino);
+        }
+
         private void Menu_Dashboard_Click(object sender, RoutedEventArgs e)
         {
-            PanelCentral.Content = new UC_Dashboard();
+            Navegar(new UC_Dashboard());
         }
 
         private void Menu_Censos_Click(object sender, RoutedEventArgs e)
         {
-            PanelCentral.Content = new FormAlta();
+            Navegar(new FormAlta());
         }
 
         private void Menu_Mapa_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Abriendo Mapa de Riesgo...");
+            Navegar(new UC_MapaRiesgo());
         }
 
         private void Menu_Algoritmo_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Abriendo Algoritmo de Priorización...");
+            MensajeBox.Mostrar("El módulo de Algoritmo de Priorización todavía está en desarrollo.", "Próximamente", MensajeBox.TipoMensaje.Info);
+        }
+
+        private void Menu_Fondos_Click(object sender, RoutedEventArgs e)
+        {
+            Navegar(new UC_Fondos());
         }
 
         private void Menu_Configuracion_Click(object sender, RoutedEventArgs e)
         {
-            PanelCentral.Content = new UC_Configuracion();
+            Navegar(new UC_Configuracion());
         }
     }
 }

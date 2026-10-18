@@ -1,34 +1,30 @@
-﻿using System;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using proyectoHabitar.Modelos;
+using proyectoHabitar.Servicios;
 
 namespace proyectoHabitar.Ventanas
 {
     public partial class FormUsuarioWindow : Window
     {
-        private readonly HttpClient _client = new HttpClient { BaseAddress = new Uri("https://localhost:7000/") };
-        private int? _idUsuarioEditar = null; 
+        private int? _idUsuarioEditar = null;
 
-     
         public FormUsuarioWindow()
         {
             InitializeComponent();
-            cmbRol.SelectedIndex = 1; 
+            cmbRol.SelectedIndex = 1;
         }
 
-      
-        public FormUsuarioWindow(UC_Configuracion.UsuarioData usuario) : this()
+        public FormUsuarioWindow(UsuarioDto usuario) : this()
         {
             _idUsuarioEditar = usuario.Id;
             lblTitulo.Text = "Editar Usuario";
 
-          
             txtUsuario.Text = usuario.Usuario;
-            txtUsuario.IsEnabled = false; 
-            PanelContrasena.Visibility = Visibility.Collapsed; 
+            txtUsuario.IsEnabled = false;
+
+            // En edición la contraseña es opcional: si se completa, se blanquea.
+            lblContrasena.Text = "Nueva contraseña (dejar vacío para no cambiarla)";
 
             txtNombre.Text = usuario.Nombre;
             txtApellido.Text = usuario.Apellido;
@@ -36,21 +32,30 @@ namespace proyectoHabitar.Ventanas
             txtEmail.Text = usuario.Email;
             cmbRol.Text = usuario.Rol;
 
-          
             PanelActivo.Visibility = Visibility.Visible;
             chkActivo.IsChecked = usuario.Activo;
         }
 
         private async void btnGuardar_Click(object sender, RoutedEventArgs e)
         {
-      
-            if (string.IsNullOrEmpty(txtUsuario.Text) || string.IsNullOrEmpty(txtNombre.Text) || string.IsNullOrEmpty(txtApellido.Text))
+            if (string.IsNullOrWhiteSpace(txtUsuario.Text) || string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtApellido.Text))
             {
-                MessageBox.Show("Por favor, completá los campos obligatorios (Usuario, Nombre y Apellido).", "HabitAR", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MensajeBox.Mostrar("Por favor, completá los campos obligatorios (Usuario, Nombre y Apellido).", "HabitAR", MensajeBox.TipoMensaje.Warning);
                 return;
             }
 
-            
+            bool esNuevo = _idUsuarioEditar == null;
+            if (esNuevo && txtPassword.Password.Length < 6)
+            {
+                MensajeBox.Mostrar("Asignale al nuevo usuario una contraseña de al menos 6 caracteres.", "HabitAR", MensajeBox.TipoMensaje.Warning);
+                return;
+            }
+            if (!esNuevo && txtPassword.Password.Length is > 0 and < 6)
+            {
+                MensajeBox.Mostrar("La nueva contraseña debe tener al menos 6 caracteres.", "HabitAR", MensajeBox.TipoMensaje.Warning);
+                return;
+            }
+
             var datos = new
             {
                 Usuario = txtUsuario.Text.Trim(),
@@ -59,47 +64,28 @@ namespace proyectoHabitar.Ventanas
                 Apellido = txtApellido.Text.Trim(),
                 DNI = txtDni.Text.Trim(),
                 Email = txtEmail.Text.Trim(),
-                Rol = (cmbRol.SelectedItem as ComboBoxItem)?.Content.ToString(),
+                Rol = (cmbRol.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "",
                 Activo = chkActivo.IsChecked ?? true
             };
 
-            string json = JsonSerializer.Serialize(datos);
-            StringContent contenido = new StringContent(json, Encoding.UTF8, "application/json");
-
+            btnGuardar.IsEnabled = false;
             try
             {
-                HttpResponseMessage respuesta;
+                RespuestaApi r = esNuevo
+                    ? await ApiClient.PostAsync("api/Usuarios", datos)
+                    : await ApiClient.PutAsync($"api/Usuarios/{_idUsuarioEditar}", datos);
 
-                if (_idUsuarioEditar == null)
-                {
-                   
-                    if (string.IsNullOrEmpty(txtPassword.Password))
-                    {
-                        MessageBox.Show("Debes asignarle una contraseña al nuevo usuario.", "HabitAR", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        return;
-                    }
-                    respuesta = await _client.PostAsync("api/Usuarios", contenido);
-                }
-                else
-                {
-                
-                    respuesta = await _client.PutAsync($"api/Usuarios/{_idUsuarioEditar}", contenido);
-                }
-
-                if (respuesta.IsSuccessStatusCode)
-                {
-                    MessageBox.Show("Datos guardados con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-                    this.DialogResult = true; 
-                    this.Close();
-                }
-                else
-                {
-                    MessageBox.Show("El servidor rechazó la solicitud. Verificá los datos.", "Error de guardado", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                MensajeBox.Mostrar(r.Mensaje, "Éxito", MensajeBox.TipoMensaje.Info);
+                this.DialogResult = true;
+                this.Close();
             }
-            catch (Exception ex)
+            catch (ApiException ex)
             {
-                MessageBox.Show($"Error al conectar con el servidor:\n{ex.Message}", "Error de Conexión", MessageBoxButton.OK, MessageBoxImage.Error);
+                MensajeBox.Mostrar(ex.Message, "No se pudo guardar", MensajeBox.TipoMensaje.Error);
+            }
+            finally
+            {
+                btnGuardar.IsEnabled = true;
             }
         }
 

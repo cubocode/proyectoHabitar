@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HabitAR - Mapa de Riesgo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <style>
+        html, body, #mapa { height: 100%; margin: 0; padding: 0; }
+        body { font-family: "Segoe UI", sans-serif; background: #E2E8F0; }
+        .leyenda { background: white; padding: 8px 10px; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.25); font-size: 12px; color: #1E293B; line-height: 20px; }
+        .leyenda b { display: block; margin-bottom: 2px; }
+        .punto { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+        .popup h3 { margin: 0 0 4px; font-size: 14px; color: #1E293B; }
+        .popup p { margin: 2px 0; font-size: 12px; color: #334155; }
+        .etiqueta { display: inline-block; padding: 1px 8px; border-radius: 10px; color: white; font-weight: 600; font-size: 11px; }
+        .aviso { color: #B45309; font-size: 11px; }
+        .popup button { margin-top: 8px; background: #3B82F6; color: white; border: 0; border-radius: 4px; padding: 5px 10px; cursor: pointer; font-weight: 600; }
+        .popup button:hover { background: #2563EB; }
+        #error { display: none; position: absolute; inset: 0; z-index: 2000; background: #F8FAFC; color: #334155; padding: 40px; text-align: center; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div id="mapa"></div>
+    <div id="error">
+        <h2>No se pudo cargar el mapa</h2>
+        <p>Se necesita conexión a internet para descargar el mapa base.</p>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"
+            integrity="sha256-65UqrlgGoRAnKfKRuriH3eeDrOhZgZo1SCenduc+SGo=" crossorigin=""></script>
+    <script>
+        // Comunicación con la app WPF (UC_MapaRiesgo):
+        //   WPF -> mapa: { tipo: "datos" | "filtros" | "enfocar" | "enfocarZona", ... }
+        //   mapa -> WPF: { tipo: "listo" } y { tipo: "abrirFicha", id }
+        const COLORES = { Rojo: "#EF4444", Amarillo: "#F59E0B", Verde: "#10B981" };
+        const TUCUMAN = [-26.8083, -65.2176];
+
+        function enviar(msg) {
+            if (window.chrome && window.chrome.webview) window.chrome.webview.postMessage(msg);
+        }
+
+        if (typeof L === "undefined") {
+            document.getElementById("error").style.display = "block";
+            throw new Error("Leaflet no cargó (¿sin internet?)");
+        }
+
+        const calles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        });
+        const satelite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+            maxZoom: 19,
+            attribution: "Imágenes &copy; Esri, Maxar, Earthstar Geographics"
+        });
+
+        const mapa = L.map("mapa", { layers: [calles], zoomControl: true }).setView(TUCUMAN, 11);
+        L.control.layers({ "Mapa": calles, "Satélite": satelite }, null, { position: "topright" }).addTo(mapa);
+        L.control.scale({ imperial: false }).addTo(mapa);
+
+        const leyenda = L.control({ position: "bottomright" });
+        leyenda.onAdd = function () {
+            const div = L.DomUtil.create("div", "leyenda");
+            div.innerHTML = "<b>Prioridad</b>" +
+                Object.entries({ Rojo: "Alta", Amarillo: "Media", Verde: "Baja" })
+                    .map(([c, t]) => `<span class="punto" style="background:${COLORES[c]}"></span>${t} (${c})`).join("<br>") +
+                "<br><span class='punto' style='border:2px dashed #475569;width:7px;height:7px'></span>Ubicación aproximada";
+            return div;
+        };
+        leyenda.addTo(mapa);
+
+        let datos = [];
+        let puntajeMaximo = 150;
+        let filtros = { colores: ["Rojo", "Amarillo", "Verde"], modo: "ambos" };
+        const capaMarcadores = L.layerGroup().addTo(mapa);
+        let capaCalor = null;
+        const marcadoresPorId = {};
+        let primeraCarga = true;
+
+        function esc(texto) {
+            return String(texto ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+        }
+
+        function popupHtml(b) {
+            const color = COLORES[b.colorSemaforo] || "#64748B";
+            return `<div class="popup">
+                <h3>${esc(b.nombre)}</h3>
+                <p><span class="etiqueta" style="background:${color}">${esc(b.colorSemaforo)}</span>
+                   &nbsp;<b>${b.puntajeCriticidad}</b> / ${puntajeMaximo} puntos</p>
+                <p>📍 ${esc(b.domicilio)} — ${esc(b.localidad)}</p>
+                <p>👨‍👩‍👧 ${b.cantidadConvivientes} integrantes · ${b.cantidadHijosMenores} menores${b.tieneIntegrantesDiscapacidad ? " · ♿ discapacidad" : ""}</p>
+                ${b.ubicacionAproximada ? '<p class="aviso">⚠️ Ubicación aproximada (centro de la localidad)</p>' : ""}
+                <button onclick="enviar({ tipo: 'abrirFicha', id: ${b.id} })">Abrir ficha</button>
+            </div>`;
+        }
+
+        function visibles() {
+            return datos.filter(b => filtros.colores.includes(b.colorSemaforo));
+        }
+
+        function dibujar() {
+            capaMarcadores.clearLayers();
+            if (capaCalor) { mapa.removeLayer(capaCalor); capaCalor = null; }
+            for (const k in marcadoresPorId) delete marcadoresPorId[k];
+
+            const lista = visibles();
+
+            if (filtros.modo !== "marcadores" && lista.length > 0 && L.heatLayer) {
+                // Zonas críticas: cada familia pesa según su puntaje, así se ven los focos de mayor vulnerabilidad.
+                const puntos = lista.map(b => [b.latitud, b.longitud, Math.max(0.15, b.puntajeCriticidad / puntajeMaximo)]);
+                capaCalor = L.heatLayer(puntos, {
+                    radius: 30, blur: 24, maxZoom: 14, minOpacity: 0.35,
+                    gradient: { 0.2: "#10B981", 0.45: "#FDE047", 0.65: "#F59E0B", 0.85: "#EF4444", 1.0: "#991B1B" }
+                }).addTo(mapa);
+            }
+
+            if (filtros.modo !== "calor") {
+                // Los más críticos se dibujan al final para que queden arriba.
+                [...lista].sort((a, b) => a.puntajeCriticidad - b.puntajeCriticidad).forEach(b => {
+                    const marcador = L.circleMarker([b.latitud, b.longitud], {
+                        radius: 6 + 8 * (b.puntajeCriticidad / puntajeMaximo),
+                        color: b.ubicacionAproximada ? "#475569" : "#FFFFFF",
+                        dashArray: b.ubicacionAproximada ? "3 3" : null,
+                        weight: 2,
+                        fillColor: COLORES[b.colorSemaforo] || "#64748B",
+                        fillOpacity: 0.85
+                    }).bindPopup(popupHtml(b)).bindTooltip(esc(b.nombre));
+                    marcador.addTo(capaMarcadores);
+                    marcadoresPorId[b.id] = marcador;
+                });
+            }
+
+            if (primeraCarga && lista.length > 0) {
+                mapa.fitBounds(L.latLngBounds(lista.map(b => [b.latitud, b.longitud])), { padding: [40, 40], maxZoom: 14 });
+                primeraCarga = false;
+            }
+        }
+
+        function enfocar(id) {
+            const b = datos.find(x => x.id === id);
+            if (!b) return;
+            mapa.flyTo([b.latitud, b.longitud], Math.max(mapa.getZoom(), 16), { duration: 0.8 });
+            setTimeout(() => marcadoresPorId[id]?.openPopup(), 850);
+        }
+
+        function enfocarZona(localidad) {
+            const zona = datos.filter(b => (b.localidad || "").toLowerCase() === (localidad || "").toLowerCase());
+            if (zona.length === 0) return;
+            mapa.flyToBounds(L.latLngBounds(zona.map(b => [b.latitud, b.longitud])), { padding: [60, 60], maxZoom: 15, duration: 0.8 });
+        }
+
+        window.chrome?.webview?.addEventListener("message", e => {
+            const msg = e.data;
+            switch (msg.tipo) {
+                case "datos":
+                    datos = msg.ubicados || [];
+                    puntajeMaximo = msg.puntajeMaximo || 150;
+                    primeraCarga = msg.reencuadrar !== false || primeraCarga;
+                    dibujar();
+                    break;
+                case "filtros":
+                    filtros = { colores: msg.colores, modo: msg.modo };
+                    dibujar();
+                    break;
+                case "enfocar":
+                    enfocar(msg.id);
+                    break;
+                case "enfocarZona":
+                    enfocarZona(msg.localidad);
+                    break;
+            }
+        });
+
+        enviar({ tipo: "listo" });
+    </script>
+</body>
+</html>

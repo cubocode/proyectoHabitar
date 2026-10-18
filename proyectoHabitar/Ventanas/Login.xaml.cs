@@ -1,17 +1,15 @@
-﻿using System;
-using System.Net.Http; //pa los endpoínts
-using System.Text;
-using System.Text.Json;
+﻿using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using proyectoHabitar.Modelos;
+using proyectoHabitar.Servicios;
 
 namespace proyectoHabitar.Ventanas
 {
     public partial class Login : Window
     {
-        
-        private readonly HttpClient _client = new HttpClient { BaseAddress = new Uri("https://localhost:7000/") };
+        private bool _isPasswordVisible = false;
 
         public Login()
         {
@@ -22,63 +20,65 @@ namespace proyectoHabitar.Ventanas
             };
         }
 
+        // Se dispara con el botón o con Enter en cualquier campo (btnIngresar tiene IsDefault="True").
         private async void btnIngresar_Click(object sender, RoutedEventArgs e)
         {
-            string usuarioInput = txtUsuario.Text.Trim();
-            string contrasenaInput = txtPassword.Password;
+            if (!btnIngresar.IsEnabled) return;
 
-          
+            string usuarioInput = txtUsuario.Text.Trim();
+            string contrasenaInput = _isPasswordVisible ? txtPasswordVisible.Text : txtPassword.Password;
+
             if (string.IsNullOrEmpty(usuarioInput) || string.IsNullOrEmpty(contrasenaInput))
             {
                 MensajeBox.Mostrar("Por favor, ingresá usuario y contraseña.", "Campos incompletos", MensajeBox.TipoMensaje.Warning);
+                (string.IsNullOrEmpty(usuarioInput) ? (Control)txtUsuario : ContrasenaActiva()).Focus();
                 return;
             }
 
-            var datosLogin = new { Usuario = usuarioInput, Contrasena = contrasenaInput };
-            string json = JsonSerializer.Serialize(datosLogin);
-            StringContent contenido = new StringContent(json, Encoding.UTF8, "application/json");
+            MostrarCargando(true);
 
             try
             {
-       
-                HttpResponseMessage respuesta = await _client.PostAsync("api/Auth/login", contenido);
+                LoginResponse datos = await ApiClient.PostAsync<LoginResponse>("api/Auth/login",
+                    new { Usuario = usuarioInput, Contrasena = contrasenaInput });
 
-                if (respuesta.IsSuccessStatusCode)
-                {
-                    
-                    btnIngresar.IsEnabled = false;
-                    btnSalir.IsEnabled = false;
-                    progresoCarga.Visibility = Visibility.Visible;
+                Sesion.Iniciar(datos);
 
-                  
-                    await Task.Delay(2500);
+                await Task.Delay(2500);
 
-                 
-                    proyectoHabitar.Ventanas.Home ventanaHome = new proyectoHabitar.Ventanas.Home();
-                    ventanaHome.Show();
-                    this.Close();
-                }
-                else
-                {
-                   
-                    MensajeBox.Mostrar("Usuario o contraseña incorrectos.", "Error de Autenticación", MensajeBox.TipoMensaje.Error);
-                }
+                Home ventanaHome = new Home();
+                ventanaHome.Show();
+                this.Close();
+                return;
             }
-            catch (Exception ex)
+            catch (ApiException ex)
             {
-           
-                MensajeBox.Mostrar($"No se pudo conectar con el servidor de la app:\n\nDetalle: {ex.Message}", "Error de Conexión", MensajeBox.TipoMensaje.Error);
+                string titulo = ex.Estado switch
+                {
+                    HttpStatusCode.Unauthorized => "Error de Autenticación",
+                    HttpStatusCode.Forbidden => "Usuario inactivo",
+                    _ => "Error de Conexión"
+                };
+                MensajeBox.Mostrar(ex.Message, titulo, MensajeBox.TipoMensaje.Error);
             }
-            finally
-            {
-              
-                btnIngresar.IsEnabled = true;
-                btnSalir.IsEnabled = true;
-                progresoCarga.Visibility = Visibility.Collapsed;
-            }
+
+            MostrarCargando(false);
+            txtPassword.Clear();
+            txtPasswordVisible.Clear();
+            ContrasenaActiva().Focus();
         }
 
-        private bool _isPasswordVisible = false;
+        private void MostrarCargando(bool cargando)
+        {
+            btnIngresar.IsEnabled = !cargando;
+            btnSalir.IsEnabled = !cargando;
+            txtUsuario.IsEnabled = !cargando;
+            txtPassword.IsEnabled = !cargando;
+            txtPasswordVisible.IsEnabled = !cargando;
+            progresoCarga.Visibility = cargando ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private Control ContrasenaActiva() => _isPasswordVisible ? txtPasswordVisible : txtPassword;
 
         private void btnTogglePassword_Click(object sender, RoutedEventArgs e)
         {
@@ -86,23 +86,23 @@ namespace proyectoHabitar.Ventanas
 
             if (_isPasswordVisible)
             {
-              
                 txtPasswordVisible.Text = txtPassword.Password;
                 txtPassword.Visibility = Visibility.Collapsed;
                 txtPasswordVisible.Visibility = Visibility.Visible;
-                btnTogglePassword.Content = "🙈"; 
+                btnTogglePassword.Content = "🙈";
+                txtPasswordVisible.Focus();
+                txtPasswordVisible.CaretIndex = txtPasswordVisible.Text.Length;
             }
             else
             {
-                
                 txtPassword.Password = txtPasswordVisible.Text;
                 txtPasswordVisible.Visibility = Visibility.Collapsed;
                 txtPassword.Visibility = Visibility.Visible;
                 btnTogglePassword.Content = "👁";
+                txtPassword.Focus();
             }
         }
 
-      
         private void txtPassword_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (!_isPasswordVisible)
@@ -111,7 +111,6 @@ namespace proyectoHabitar.Ventanas
             }
         }
 
-       
         private void txtPasswordVisible_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (_isPasswordVisible)
@@ -126,16 +125,6 @@ namespace proyectoHabitar.Ventanas
             if (seguro)
             {
                 Application.Current.Shutdown();
-            }
-        }
-
-        private void Input_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-           
-            if (e.Key == System.Windows.Input.Key.Enter)
-            {
-               
-                btnIngresar_Click(this, new RoutedEventArgs());
             }
         }
     }

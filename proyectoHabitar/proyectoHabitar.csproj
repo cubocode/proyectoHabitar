@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
+    <PackageReference Include="QuestPDF" Version="2026.5.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +33,13 @@
     <Resource Include="Imagenes\personas.png" />
     <Resource Include="Imagenes\usuario.png" />
     <Resource Include="Ventanas\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Página del Mapa de Riesgo (se sirve desde la carpeta de salida como https://habitar.local/) -->
+    <None Update="Mapa\**\*" CopyToOutputDirectory="PreserveNewest" />
+    <!-- URL del servidor (ApiUrl) -->
+    <None Update="config.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

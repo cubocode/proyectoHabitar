@@ -1,38 +1,61 @@
 ﻿<UserControl x:Class="proyectoHabitar.Ventanas.UC_Configuracion"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="700">
+
+    <UserControl.Resources>
+        <Style x:Key="TarjetaConfig" TargetType="Button">
+            <Setter Property="Width" Value="170"/>
+            <Setter Property="Height" Value="110"/>
+            <Setter Property="Margin" Value="0,0,20,20"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="fondo" Background="{TemplateBinding Background}" CornerRadius="10" BorderBrush="#334155" BorderThickness="1" Padding="10">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="fondo" Property="Background" Value="#2D3748"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="fondo" Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
 
     <Grid Background="#F5F6F8">
 
         <Grid x:Name="GridMenuConfig" Visibility="Visible" Margin="30">
             <StackPanel>
                 <TextBlock Text="Configuración del Sistema" FontSize="26" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,5"/>
-                <TextBlock Text="Módulo de parametrización global." FontSize="14" Foreground="#64748B" Margin="0,0,0,30"/>
+                <TextBlock Text="Módulo de parametrización global (solo Administradores)." FontSize="14" Foreground="#64748B" Margin="0,0,0,30"/>
 
                 <WrapPanel>
-                    <Button x:Name="btnUsuarios" Width="150" Height="100" Margin="0,0,20,20" Cursor="Hand" Click="btnUsuarios_Click">
-                        <Button.Resources>
-                            <Style TargetType="Button">
-                                <Setter Property="Background" Value="#1E293B"/>
-                                <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" CornerRadius="10" BorderBrush="#334155" BorderThickness="1">
-                                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                    <TextBlock Text="👤" FontSize="28" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                                                    <TextBlock Text="Gestión Usuarios" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                                                </StackPanel>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </Button.Resources>
+                    <Button x:Name="btnUsuarios" Style="{StaticResource TarjetaConfig}" Click="btnUsuarios_Click">
+                        <StackPanel>
+                            <TextBlock Text="👤" FontSize="28" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                            <TextBlock Text="Gestión Usuarios" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="btnRecalcular" Style="{StaticResource TarjetaConfig}" Click="btnRecalcular_Click"
+                            ToolTip="Vuelve a calcular puntaje y semáforo de todo el padrón con el algoritmo vigente.">
+                        <StackPanel>
+                            <TextBlock Text="🔄" FontSize="28" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                            <TextBlock Text="Recalcular puntajes" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                            <TextBlock Text="de todo el padrón" FontSize="11" Foreground="#94A3B8" HorizontalAlignment="Center"/>
+                        </StackPanel>
                     </Button>
                 </WrapPanel>
             </StackPanel>
@@ -56,22 +79,22 @@
             <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
                 <Button x:Name="btnNuevo" Content="+ Nuevo Usuario" Width="130" Height="32" Background="#10B981" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Margin="0,0,10,0" Cursor="Hand" Click="btnNuevo_Click"/>
                 <Button x:Name="btnEditar" Content="✏️ Editar" Width="100" Height="32" Background="#3B82F6" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Margin="0,0,10,0" Cursor="Hand" Click="btnEditar_Click"/>
-                <Button x:Name="btnEliminar" Content="🗑️ Eliminar" Width="100" Height="32" Background="#EF4444" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand" Click="btnEliminar_Click"/>
+                <Button x:Name="btnEliminar" Content="🗑️ Dar de baja" Width="110" Height="32" Background="#EF4444" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand" Click="btnEliminar_Click"/>
             </StackPanel>
 
-            <DataGrid x:Name="dgUsuarios" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" 
-                      Background="White" RowBackground="#FFFFFF" AlternatingRowBackground="#F8FAFC" 
+            <DataGrid x:Name="dgUsuarios" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True"
+                      Background="White" RowBackground="#FFFFFF" AlternatingRowBackground="#F8FAFC"
                       BorderBrush="#CBD5E1" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#E2E8F0"
-                      SelectionMode="Single" FontSize="13" VerticalAlignment="Stretch">
+                      SelectionMode="Single" FontSize="13" VerticalAlignment="Stretch" MouseDoubleClick="dgUsuarios_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                     <DataGridTextColumn Header="Usuario" Binding="{Binding Usuario}" Width="100"/>
                     <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="120"/>
                     <DataGridTextColumn Header="Apellido" Binding="{Binding Apellido}" Width="120"/>
                     <DataGridTextColumn Header="DNI" Binding="{Binding DNI}" Width="90"/>
-                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="150"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
                     <DataGridTextColumn Header="Rol / Perfil" Binding="{Binding Rol}" Width="110"/>
-                    <DataGridTextColumn Header="Estado" Binding="{Binding ActivoTexto}" Width="80"/>
+                    <DataGridTextColumn Header="Estado" Binding="{Binding ActivoTexto}" Width="90"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

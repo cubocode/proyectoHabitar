@@ -1,0 +1,119 @@
+<Window x:Class="proyectoHabitar.Ventanas.FormMovimientoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Movimiento de caja" Width="460" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="#1E293B">
+
+    <Window.Resources>
+        <Style x:Key="Etiqueta" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,10,0,3"/>
+        </Style>
+        <Style x:Key="CampoTexto" TargetType="TextBox">
+            <Setter Property="Background" Value="#0F172A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="CaretBrush" Value="White"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5,0"/>
+        </Style>
+        <Style x:Key="BotonTipo" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="fondo" Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="6" Padding="0,8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="fondo" Property="Background" Value="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <Setter TargetName="fondo" Property="BorderBrush" Value="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="fondo" Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="lblTitulo" Text="Nuevo movimiento" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+
+        <StackPanel Grid.Row="1" Margin="0,0,0,20">
+            <TextBlock Text="Tipo de movimiento" Style="{StaticResource Etiqueta}" Margin="0,0,0,5"/>
+            <UniformGrid Columns="2">
+                <RadioButton x:Name="rbIngreso" Content="➕ Ingreso" GroupName="tipo" Style="{StaticResource BotonTipo}" Tag="#047857" Margin="0,0,5,0" FontWeight="SemiBold" Checked="Tipo_Checked"/>
+                <RadioButton x:Name="rbEgreso" Content="➖ Egreso" GroupName="tipo" Style="{StaticResource BotonTipo}" Tag="#B91C1C" Margin="5,0,0,0" FontWeight="SemiBold" Checked="Tipo_Checked"/>
+            </UniformGrid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="110"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="0,0,10,0">
+                    <TextBlock Text="Fecha *" Style="{StaticResource Etiqueta}"/>
+                    <DatePicker x:Name="dpFecha" Height="30" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Hora (HH:mm) *" Style="{StaticResource Etiqueta}"/>
+                    <TextBox x:Name="txtHora" Style="{StaticResource CampoTexto}" MaxLength="5"/>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Text="Categoría * (elegí una o escribí una nueva)" Style="{StaticResource Etiqueta}"/>
+            <ComboBox x:Name="cmbCategoria" Height="30" IsEditable="True" VerticalContentAlignment="Center"/>
+
+            <TextBlock Text="Concepto *" Style="{StaticResource Etiqueta}"/>
+            <TextBox x:Name="txtConcepto" Style="{StaticResource CampoTexto}" MaxLength="150"/>
+
+            <TextBlock Text="Detalle / observaciones" Style="{StaticResource Etiqueta}"/>
+            <TextBox x:Name="txtDetalle" Style="{StaticResource CampoTexto}" Height="70" TextWrapping="Wrap" AcceptsReturn="True"
+                     VerticalContentAlignment="Top" Padding="5" MaxLength="500" VerticalScrollBarVisibility="Auto"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="0,0,10,0">
+                    <TextBlock Text="Monto ($) *" Style="{StaticResource Etiqueta}"/>
+                    <TextBox x:Name="txtMonto" Style="{StaticResource CampoTexto}" FontSize="15" FontWeight="SemiBold"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Medio de pago *" Style="{StaticResource Etiqueta}"/>
+                    <ComboBox x:Name="cmbMedioPago" Height="30" VerticalContentAlignment="Center" SelectedIndex="0">
+                        <ComboBoxItem Content="Efectivo"/>
+                        <ComboBoxItem Content="Transferencia bancaria"/>
+                        <ComboBoxItem Content="Cheque"/>
+                        <ComboBoxItem Content="Tarjeta de débito"/>
+                        <ComboBoxItem Content="Tarjeta de crédito"/>
+                        <ComboBoxItem Content="Billetera virtual"/>
+                        <ComboBoxItem Content="Otro"/>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Text="Nº de comprobante / factura / recibo" Style="{StaticResource Etiqueta}"/>
+            <TextBox x:Name="txtComprobante" Style="{StaticResource CampoTexto}" MaxLength="60"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="btnCancelar" Content="Cancelar" Width="90" Height="32" Background="Transparent" Foreground="#94A3B8" BorderThickness="0" Margin="0,0,10,0" Cursor="Hand" IsCancel="True"/>
+            <Button x:Name="btnGuardar" Content="Guardar" Width="110" Height="32" Background="#3B82F6" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand" Click="btnGuardar_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

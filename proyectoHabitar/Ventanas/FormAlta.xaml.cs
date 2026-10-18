@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
-using System.Text.Json.Serialization; // 🌟 REQUERIDO: Para mapear alias de JSON a C#
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
+using proyectoHabitar.Modelos;
+using proyectoHabitar.Servicios;
 
 namespace proyectoHabitar.Ventanas
 {
     public partial class FormAlta : UserControl
     {
-        private readonly HttpClient _client = new HttpClient { BaseAddress = new Uri("https://localhost:7000/") };
-        private List<BeneficiarioGridDTO> _listaCompleta = new List<BeneficiarioGridDTO>();
+        private List<BeneficiarioListaDto> _listaCompleta = new List<BeneficiarioListaDto>();
         private string _filtroColorActual = "Todos";
+        private BeneficiarioDto? _fichaAbierta;
 
         public FormAlta()
         {
@@ -30,20 +34,10 @@ namespace proyectoHabitar.Ventanas
         {
             try
             {
-                HttpResponseMessage respuesta = await _client.GetAsync("api/Beneficiarios");
-                if (respuesta.IsSuccessStatusCode)
-                {
-                    string json = await respuesta.Content.ReadAsStringAsync();
-
-                    // 🌟 SOLUCIÓN DEFINITIVA: Deserializador tipado acorazado
-                    _listaCompleta = JsonSerializer.Deserialize<List<BeneficiarioGridDTO>>(json);
-
-                    System.Windows.Application.Current.Dispatcher.Invoke(() => {
-                        AplicarFiltrosCombinados();
-                    });
-                }
+                _listaCompleta = await ApiClient.GetAsync<List<BeneficiarioListaDto>>("api/Beneficiarios") ?? new List<BeneficiarioListaDto>();
+                AplicarFiltrosCombinados();
             }
-            catch (Exception ex)
+            catch (ApiException ex)
             {
                 MensajeBox.Mostrar($"Error al sincronizar el padrón:\n\n{ex.Message}", "Error de Servidor", MensajeBox.TipoMensaje.Error);
             }
@@ -56,24 +50,25 @@ namespace proyectoHabitar.Ventanas
 
         private void FiltroColor_Click(object sender, RoutedEventArgs e)
         {
-            Button btn = sender as Button;
-            if (btn == null) return;
+            if (sender is not Button btn) return;
 
-            btnFiltroTodos.Background = Brushes.White; btnFiltroTodos.Foreground = (Brush)new BrushConverter().ConvertFromString("#334155");
-            btnFiltroRojo.Background = Brushes.White; btnFiltroRojo.Foreground = (Brush)new BrushConverter().ConvertFromString("#EF4444");
-            btnFiltroAmarillo.Background = Brushes.White; btnFiltroAmarillo.Foreground = (Brush)new BrushConverter().ConvertFromString("#D97706");
-            btnFiltroVerde.Background = Brushes.White; btnFiltroVerde.Foreground = (Brush)new BrushConverter().ConvertFromString("#10B981");
+            btnFiltroTodos.Background = Brushes.White; btnFiltroTodos.Foreground = Pincel("#334155");
+            btnFiltroRojo.Background = Brushes.White; btnFiltroRojo.Foreground = Pincel("#EF4444");
+            btnFiltroAmarillo.Background = Brushes.White; btnFiltroAmarillo.Foreground = Pincel("#D97706");
+            btnFiltroVerde.Background = Brushes.White; btnFiltroVerde.Foreground = Pincel("#10B981");
 
-            if (btn.Name == "btnFiltroTodos") { _filtroColorActual = "Todos"; btn.Background = (Brush)new BrushConverter().ConvertFromString("#334155"); btn.Foreground = Brushes.White; }
-            else if (btn.Name == "btnFiltroRojo") { _filtroColorActual = "Rojo"; btn.Background = (Brush)new BrushConverter().ConvertFromString("#FEE2E2"); }
-            else if (btn.Name == "btnFiltroAmarillo") { _filtroColorActual = "Amarillo"; btn.Background = (Brush)new BrushConverter().ConvertFromString("#FEF3C7"); }
-            else if (btn.Name == "btnFiltroVerde") { _filtroColorActual = "Verde"; btn.Background = (Brush)new BrushConverter().ConvertFromString("#D1FAE5"); }
+            if (btn.Name == "btnFiltroTodos") { _filtroColorActual = "Todos"; btn.Background = Pincel("#334155"); btn.Foreground = Brushes.White; }
+            else if (btn.Name == "btnFiltroRojo") { _filtroColorActual = "Rojo"; btn.Background = Pincel("#FEE2E2"); }
+            else if (btn.Name == "btnFiltroAmarillo") { _filtroColorActual = "Amarillo"; btn.Background = Pincel("#FEF3C7"); }
+            else if (btn.Name == "btnFiltroVerde") { _filtroColorActual = "Verde"; btn.Background = Pincel("#D1FAE5"); }
 
             AplicarFiltrosCombinados();
         }
 
         private void AplicarFiltrosCombinados()
         {
+            if (!IsInitialized) return;
+
             string texto = txtBuscar.Text.Trim().ToLower();
             var resultado = _listaCompleta.AsEnumerable();
 
@@ -84,25 +79,17 @@ namespace proyectoHabitar.Ventanas
 
             if (!string.IsNullOrEmpty(texto))
             {
-                resultado = resultado.Where(b => b.Nombre.ToLower().Contains(texto) || b.Dni.Contains(texto));
+                resultado = resultado.Where(b => b.Nombre.ToLower().Contains(texto)
+                                              || b.Dni.ToLower().Contains(texto)
+                                              || b.Localidad.ToLower().Contains(texto));
             }
 
-            // Ordenamiento alfabético ascendente (A-Z) directo sobre la clase tipada
             dgBeneficiarios.ItemsSource = resultado.OrderBy(b => b.Nombre).ToList();
         }
 
         private void NavegarAFormularioDeCarga(int idBeneficiario)
         {
-            DependencyObject parent = VisualTreeHelper.GetParent(this);
-            while (parent != null && !(parent is Home))
-            {
-                parent = VisualTreeHelper.GetParent(parent);
-            }
-
-            if (parent is Home ventanaPrincipal)
-            {
-                ventanaPrincipal.PanelCentral.Content = new UC_CargaBeneficiario(idBeneficiario);
-            }
+            Home.NavegarDesde(this, new UC_CargaBeneficiario(idBeneficiario));
         }
 
         private void btnAgregar_Click(object sender, RoutedEventArgs e)
@@ -112,7 +99,7 @@ namespace proyectoHabitar.Ventanas
 
         private void btnEditar_Click(object sender, RoutedEventArgs e)
         {
-            if (dgBeneficiarios.SelectedItem is BeneficiarioGridDTO seleccionado)
+            if (dgBeneficiarios.SelectedItem is BeneficiarioListaDto seleccionado)
             {
                 NavegarAFormularioDeCarga(seleccionado.Id);
             }
@@ -122,184 +109,185 @@ namespace proyectoHabitar.Ventanas
             }
         }
 
-        // Doble click: Abre el modal sin excepciones de casteo de tipos
         private async void dgBeneficiarios_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (dgBeneficiarios.SelectedItem is BeneficiarioGridDTO seleccionado)
+            if (dgBeneficiarios.SelectedItem is not BeneficiarioListaDto seleccionado) return;
+
+            try
             {
-                try
+                BeneficiarioDto r = await ApiClient.GetAsync<BeneficiarioDto>($"api/Beneficiarios/{seleccionado.Id}");
+                _fichaAbierta = r;
+
+                lblModalTitulo.Text = $"Ficha de Emergencia: {r.Apellido}, {r.Nombre}";
+                lblModalSemaforo.Text = $"Prioridad Asignada: {r.ColorSemaforo.ToUpper()} ({r.PuntajeCriticidad} Puntos de Criticidad)";
+                lblModalSemaforo.Foreground = r.ColorSemaforo switch
                 {
-                    HttpResponseMessage respuesta = await _client.GetAsync($"api/Beneficiarios/{seleccionado.Id}");
+                    "Rojo" => Brushes.Red,
+                    "Amarillo" => Brushes.Orange,
+                    _ => Brushes.Green
+                };
 
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        string json = await respuesta.Content.ReadAsStringAsync();
-                        using (JsonDocument doc = JsonDocument.Parse(json))
-                        {
-                            var r = doc.RootElement;
+                string edad = r.FechaNacimiento.HasValue ? $" ({CalcularEdad(r.FechaNacimiento.Value)} años)" : "";
 
-                            lblModalTitulo.Text = $"Ficha de Emergencia: {r.GetProperty("apellido").GetString()}, {r.GetProperty("nombre").GetString()}";
+                txtModalDocumentos.Text = $"• Nro de CUIL: {r.Cuil}\n" +
+                                          $"• Documento: DNI N° {r.NumeroDocumento}\n" +
+                                          $"• Fecha de Nacimiento: {r.FechaNacimiento:dd/MM/yyyy}{edad}\n" +
+                                          $"• Identidad de Género: {r.Genero}";
 
-                            // 🌟 EVITA CRASH: Al desglosar el JSON plano con minúsculas del endpoint por ID, leemos de forma segura
-                            int puntos = r.GetProperty("puntajeCriticidad").GetInt32();
-                            string prioridadString = r.GetProperty("colorSemaforo").GetString();
-                            lblModalSemaforo.Text = $"Prioridad Asignada: {prioridadString.ToUpper()} ({puntos} Puntos de Criticidad)";
+                txtModalContacto.Text = $"• Celular: {(string.IsNullOrWhiteSpace(r.TelefonoCelular) ? "-" : "+54 9 " + r.TelefonoCelular)}\n" +
+                                        $"• Correo Electrónico: {(string.IsNullOrWhiteSpace(r.Email) ? "-" : r.Email)}\n" +
+                                        $"• Dirección: {r.Domicilio} ({r.Localidad}, CP {r.CodigoPostal})";
 
-                            if (prioridadString == "Rojo") lblModalSemaforo.Foreground = Brushes.Red;
-                            else if (prioridadString == "Amarillo") lblModalSemaforo.Foreground = Brushes.Orange;
-                            else lblModalSemaforo.Foreground = Brushes.Green;
+                txtModalVivienda.Text = $"• Vivienda Original: {r.TipoViviendaOriginal}\n" +
+                                        $"• Tenencia del Terreno: {r.RegimenTenenciaTerreno}\n" +
+                                        $"• Piso / Techo: {r.MaterialPredominantePiso} / {r.MaterialPredominanteTecho}\n" +
+                                        $"• Provisión de Agua: {r.ProcedenciaAgua}\n" +
+                                        $"• Desagüe Sanitario: {r.DesagueInodoro}\n" +
+                                        $"• Hogar: {r.CantidadConvivientes} integrantes, {r.CantidadHijosMenores} menores, {r.CantidadAdultosMayores} adultos mayores" +
+                                        (r.TieneIntegrantesDiscapacidad ? ", con discapacidad" : "");
 
-                            txtModalDocumentos.Text = $"• Nro de CUIL: {r.GetProperty("cuil").GetString()}\n" +
-                                                      $"• Documento: DNI N° {r.GetProperty("numeroDocumento").GetString()}\n" +
-                                                      $"• Identidad de Género: {r.GetProperty("genero").GetString()}";
+                txtModalDireccionMapa.Text = Mapas.DireccionCompleta(r);
+                txtModalCoordenadas.Text = r.Latitud.HasValue
+                    ? $"{r.Latitud.Value.ToString("F5", CultureInfo.InvariantCulture)}, {r.Longitud!.Value.ToString("F5", CultureInfo.InvariantCulture)}" +
+                      (r.UbicacionAproximada ? "\n(ubicación aproximada)" : "")
+                    : "Sin coordenadas cargadas";
 
-                            txtModalContacto.Text = $"• Celular: +54 9 {r.GetProperty("telefonoCelular").GetString()}\n" +
-                                                    $"• Correo Electrónico: {r.GetProperty("email").GetString()}\n" +
-                                                    $"• Dirección: {r.GetProperty("domicilio").GetString()} ({r.GetProperty("localidad").GetString()}, CP {r.GetProperty("codigoPostal").GetString()})";
-
-                            txtModalVivienda.Text = $"• Vivienda Original: {r.GetProperty("tipoViviendaOriginal").GetString()}\n" +
-                                                    $"• Provisión de Agua: {r.GetProperty("procedenciaAgua").GetString()}\n" +
-                                                    $"• Desagüe Sanitario: {r.GetProperty("desagueInodoro").GetString()}";
-
-                            txtModalDireccionMapa.Text = $"{r.GetProperty("domicilio").GetString()}, {r.GetProperty("localidad").GetString()}, Tucumán";
-
-                            ModalDetalle.Visibility = Visibility.Visible;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MensajeBox.Mostrar($"Error al abrir la ficha: {ex.Message}", "Error de Comunicación", MensajeBox.TipoMensaje.Error);
-                }
+                ModalDetalle.Visibility = Visibility.Visible;
+            }
+            catch (ApiException ex)
+            {
+                MensajeBox.Mostrar($"Error al abrir la ficha: {ex.Message}", "Error de Comunicación", MensajeBox.TipoMensaje.Error);
             }
         }
 
-        // Descargar PDF Nativo en la PC local
+        private void btnAbrirGoogleMaps_Click(object sender, RoutedEventArgs e)
+        {
+            if (_fichaAbierta == null) return;
+            Mapas.AbrirEnGoogleMaps(_fichaAbierta.Latitud, _fichaAbierta.Longitud, Mapas.DireccionCompleta(_fichaAbierta));
+        }
+
         private void btnDescargarPdf_Click(object sender, RoutedEventArgs e)
         {
+            if (_fichaAbierta == null) return;
+
             try
             {
+                string nombreArchivo = $"Ficha_Social_{_fichaAbierta.Apellido}_{_fichaAbierta.Nombre}";
+                foreach (char c in Path.GetInvalidFileNameChars()) nombreArchivo = nombreArchivo.Replace(c, '_');
+
                 var dialogoGuardar = new Microsoft.Win32.SaveFileDialog
                 {
-                    FileName = $"Ficha_Social_{lblModalTitulo.Text.Replace("Ficha de Emergencia: ", "")}",
+                    FileName = nombreArchivo,
                     DefaultExt = ".pdf",
-                    Filter = "Documentos PDF (.pdf)|*.pdf"
+                    Filter = "Documento PDF (*.pdf)|*.pdf"
                 };
 
                 if (dialogoGuardar.ShowDialog() == true)
                 {
-                    PrintDialog pd = new PrintDialog();
-                    btnDescargarPdf.Visibility = Visibility.Collapsed;
-                    btnImprimirFicha.Visibility = Visibility.Collapsed;
+                    QuestPDF.Settings.License = LicenseType.Community;
 
-                    pd.PrintVisual(ModalDetalle, "Exportando PDF HabitAR...");
+                    string colorPrioridad = _fichaAbierta.ColorSemaforo switch
+                    {
+                        "Rojo" => QuestPDF.Helpers.Colors.Red.Medium,
+                        "Amarillo" => QuestPDF.Helpers.Colors.Orange.Darken1,
+                        _ => QuestPDF.Helpers.Colors.Green.Darken1
+                    };
 
-                    btnDescargarPdf.Visibility = Visibility.Visible;
-                    btnImprimirFicha.Visibility = Visibility.Visible;
-                    MensajeBox.Mostrar("La ficha social fue exportada a PDF de forma exitosa.", "Exportación Completada", MensajeBox.TipoMensaje.Info);
+                    Document.Create(contenedor =>
+                    {
+                        contenedor.Page(pagina =>
+                        {
+                            pagina.Size(PageSizes.A4);
+                            pagina.Margin(2, Unit.Centimetre);
+                            pagina.PageColor(QuestPDF.Helpers.Colors.White);
+                            pagina.DefaultTextStyle(x => x.FontSize(12).FontColor(QuestPDF.Helpers.Colors.Grey.Darken3));
+
+                            pagina.Header()
+                                .Text(lblModalTitulo.Text)
+                                .SemiBold().FontSize(20).FontColor(QuestPDF.Helpers.Colors.Blue.Medium);
+
+                            pagina.Content().PaddingVertical(1, Unit.Centimetre).Column(columna =>
+                            {
+                                columna.Spacing(15);
+
+                                columna.Item().Text(lblModalSemaforo.Text).Bold().FontColor(colorPrioridad);
+
+                                columna.Item().Background(QuestPDF.Helpers.Colors.Grey.Lighten3).Padding(10).Column(sub => {
+                                    sub.Item().Text("DATOS DE IDENTIFICACIÓN").Bold().FontSize(10).FontColor(QuestPDF.Helpers.Colors.Grey.Darken1);
+                                    sub.Item().Text(txtModalDocumentos.Text);
+                                });
+
+                                columna.Item().Background(QuestPDF.Helpers.Colors.Grey.Lighten3).Padding(10).Column(sub => {
+                                    sub.Item().Text("DATOS DE CONTACTO Y LOCALIZACIÓN").Bold().FontSize(10).FontColor(QuestPDF.Helpers.Colors.Grey.Darken1);
+                                    sub.Item().Text(txtModalContacto.Text);
+                                    if (_fichaAbierta.Latitud.HasValue)
+                                        sub.Item().Text($"• Coordenadas: {txtModalCoordenadas.Text.Replace("\n", " ")}");
+                                });
+
+                                columna.Item().Background(QuestPDF.Helpers.Colors.Grey.Lighten3).Padding(10).Column(sub => {
+                                    sub.Item().Text("INFRAESTRUCTURA Y CRITICIDAD PREVIA").Bold().FontSize(10).FontColor(QuestPDF.Helpers.Colors.Grey.Darken1);
+                                    sub.Item().Text(txtModalVivienda.Text);
+                                });
+                            });
+
+                            pagina.Footer()
+                                .AlignCenter()
+                                .Text(x => {
+                                    x.Span($"Ficha generada por el Sistema HabitAR el {DateTime.Now:dd/MM/yyyy HH:mm} por {Sesion.NombreCompleto} - Pág. ");
+                                    x.CurrentPageNumber();
+                                });
+                        });
+                    }).GeneratePdf(dialogoGuardar.FileName);
+
+                    MensajeBox.Mostrar("PDF generado exitosamente.", "Exportación Exitosa", MensajeBox.TipoMensaje.Info);
+
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dialogoGuardar.FileName) { UseShellExecute = true });
                 }
             }
             catch (Exception ex)
             {
-                btnDescargarPdf.Visibility = Visibility.Visible;
-                btnImprimirFicha.Visibility = Visibility.Visible;
-                MensajeBox.Mostrar($"Error al descargar: {ex.Message}", "Error de Guardado", MensajeBox.TipoMensaje.Error);
-            }
-        }
-
-        // Impresión nativa por PrintVisual
-        private void btnImprimirFicha_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                PrintDialog cuadroImpresion = new PrintDialog();
-
-                if (cuadroImpresion.ShowDialog() == true)
-                {
-                    btnDescargarPdf.Visibility = Visibility.Collapsed;
-                    btnImprimirFicha.Visibility = Visibility.Collapsed;
-
-                    Transform transformacionOriginal = ModalDetalle.LayoutTransform;
-                    double margen = 40;
-                    double escala = Math.Min(
-                        (cuadroImpresion.PrintableAreaWidth - margen) / 740,
-                        (cuadroImpresion.PrintableAreaHeight - margen) / 490
-                    );
-
-                    ModalDetalle.LayoutTransform = new ScaleTransform(escala, escala);
-
-                    Size tamañoPagina = new Size(cuadroImpresion.PrintableAreaWidth, cuadroImpresion.PrintableAreaHeight);
-                    ModalDetalle.Measure(tamañoPagina);
-                    ModalDetalle.Arrange(new Rect(new Point(0, 0), tamañoPagina));
-
-                    cuadroImpresion.PrintVisual(ModalDetalle, $"Ficha HabitAR - {lblModalTitulo.Text}");
-
-                    ModalDetalle.LayoutTransform = transformacionOriginal;
-                    btnDescargarPdf.Visibility = Visibility.Visible;
-                    btnImprimirFicha.Visibility = Visibility.Visible;
-                    ModalDetalle.InvalidateVisual();
-
-                    MensajeBox.Mostrar("Documento enviado a la cola de impresión de manera correcta.", "Impresión exitosa", MensajeBox.TipoMensaje.Info);
-                }
-            }
-            catch (Exception ex)
-            {
-                btnDescargarPdf.Visibility = Visibility.Visible;
-                btnImprimirFicha.Visibility = Visibility.Visible;
-                MensajeBox.Mostrar($"No se pudo imprimir:\n\n{ex.Message}", "Error de Impresión", MensajeBox.TipoMensaje.Error);
+                MensajeBox.Mostrar($"No se pudo escribir el PDF: {ex.Message}", "Error de Escritura", MensajeBox.TipoMensaje.Error);
             }
         }
 
         private void btnCerrarModal_Click(object sender, RoutedEventArgs e)
         {
             ModalDetalle.Visibility = Visibility.Collapsed;
+            _fichaAbierta = null;
         }
 
         private async void btnBaja_Click(object sender, RoutedEventArgs e)
         {
-            if (dgBeneficiarios.SelectedItem is BeneficiarioGridDTO seleccionado)
+            if (dgBeneficiarios.SelectedItem is not BeneficiarioListaDto seleccionado)
             {
-                bool seguro = MensajeBox.Mostrar($"¿Está seguro de que desea dar de baja a:\n\n{seleccionado.Nombre}?", "Confirmar Baja", MensajeBox.TipoMensaje.QuerySiNo);
+                MensajeBox.Mostrar("Seleccioná un beneficiario de la grilla para darlo de baja.", "Selección Requerida", MensajeBox.TipoMensaje.Warning);
+                return;
+            }
 
-                if (seguro)
-                {
-                    try
-                    {
-                        HttpResponseMessage respuesta = await _client.DeleteAsync($"api/Beneficiarios/{seleccionado.Id}");
-                        if (respuesta.IsSuccessStatusCode)
-                        {
-                            MensajeBox.Mostrar("El beneficiario ha sido removido con éxito del padrón.", "Baja Completada", MensajeBox.TipoMensaje.Info);
-                            CargarPadronDesdeAPI();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MensajeBox.Mostrar($"Error: {ex.Message}", "Error", MensajeBox.TipoMensaje.Error);
-                    }
-                }
+            bool seguro = MensajeBox.Mostrar($"¿Está seguro de que desea dar de baja a:\n\n{seleccionado.Nombre}?\n\n" +
+                                             "El registro se conserva en la base y se reactiva si se lo vuelve a relevar.",
+                                             "Confirmar Baja", MensajeBox.TipoMensaje.QuerySiNo);
+            if (!seguro) return;
+
+            try
+            {
+                RespuestaApi respuesta = await ApiClient.DeleteAsync($"api/Beneficiarios/{seleccionado.Id}");
+                MensajeBox.Mostrar(respuesta.Mensaje, "Baja Completada", MensajeBox.TipoMensaje.Info);
+                CargarPadronDesdeAPI();
+            }
+            catch (ApiException ex)
+            {
+                MensajeBox.Mostrar($"No se pudo dar de baja:\n\n{ex.Message}", "Error", MensajeBox.TipoMensaje.Error);
             }
         }
-    }
 
-    // 🌟 CLAVE DEL ÉXITO: Mapeamos con alias explícitos para forzar la compatibilidad entre CamelCase y C# sin perder tipado
-    public class BeneficiarioGridDTO
-    {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
+        private static int CalcularEdad(DateTime nacimiento)
+        {
+            int edad = DateTime.Today.Year - nacimiento.Year;
+            if (nacimiento.Date > DateTime.Today.AddYears(-edad)) edad--;
+            return edad;
+        }
 
-        [JsonPropertyName("fechaRelevamiento")]
-        public DateTime FechaRelevamiento { get; set; }
-
-        [JsonPropertyName("nombre")]
-        public string Nombre { get; set; }
-
-        [JsonPropertyName("dni")]
-        public string Dni { get; set; }
-
-        [JsonPropertyName("domicilio")]
-        public string Domicilio { get; set; }
-
-        [JsonPropertyName("colorSemaforo")]
-        public string ColorSemaforo { get; set; }
+        private static Brush Pincel(string hex) => (Brush)new BrushConverter().ConvertFromString(hex)!;
     }
 }

@@ -19,7 +19,7 @@
                 <TextBox x:Name="txtUsuario" Background="#0F172A" Foreground="White" BorderBrush="#334155" Height="30" VerticalContentAlignment="Center" Padding="5,0"/>
 
                 <StackPanel x:Name="PanelContrasena">
-                    <TextBlock Text="Contraseña" Foreground="#94A3B8" Margin="0,10,0,3" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="lblContrasena" Text="Contraseña (mínimo 6 caracteres)" Foreground="#94A3B8" Margin="0,10,0,3" FontWeight="SemiBold"/>
                     <PasswordBox x:Name="txtPassword" Background="#0F172A" Foreground="White" BorderBrush="#334155" Height="30" VerticalContentAlignment="Center" Padding="5,0"/>
                 </StackPanel>
 

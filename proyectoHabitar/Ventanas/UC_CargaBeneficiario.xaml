@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:proyectoHabitar.Ventanas"
              mc:Ignorable="d" 
-             d:DesignHeight="950" d:DesignWidth="800">
+             d:DesignHeight="1150" d:DesignWidth="800">
 
     <Grid Background="#F5F6F8">
         <Grid.RowDefinitions>
@@ -16,7 +16,7 @@
         <Border Grid.Row="0" Background="#1E293B" Padding="25,20" CornerRadius="0,0,10,10" Margin="0,0,0,15">
             <StackPanel>
                 <TextBlock Text="Gestión Territorial - Relevamientos" FontSize="24" FontWeight="Bold" Foreground="White"/>
-                <TextBlock Text="Carga de datos del beneficiario titular, grupo familiar, vivienda previa e infraestructura sanitaria." FontSize="13" Foreground="#94A3B8" Margin="0,3,0,0"/>
+                <TextBlock Text="Carga de datos del beneficiario titular, grupo familiar, vivienda previa e infraestructura sanitaria. Los campos con * son obligatorios." FontSize="13" Foreground="#94A3B8" Margin="0,3,0,0" TextWrapping="Wrap"/>
             </StackPanel>
         </Border>
 
@@ -35,34 +35,41 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Nro Documento (DNI)" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Nro Documento (DNI) *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <TextBox x:Name="txtTitularDni" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" Margin="0,0,10,0">
-                                <TextBlock Text="Nro de CUIL (Sin guiones)" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Nro de CUIL (Sin guiones) *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <TextBox x:Name="txtTitularCuil" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="2">
-                                <TextBlock Text="Fecha de Nacimiento" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Fecha de Nacimiento *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <DatePicker x:Name="dpTitularFechaNac" Height="32" VerticalContentAlignment="Center"/>
                             </StackPanel>
                         </Grid>
 
                         <Grid Margin="0,0,0,15">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
+                            <!-- Apellido y nombre separados: antes se partía el texto por la coma y sin coma el nombre quedaba vacío -->
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Apellido y Nombres Completos" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Apellido(s) *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtTitularApellido" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                <TextBlock Text="Nombre(s) *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <TextBox x:Name="txtTitularNombre" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
                             </StackPanel>
 
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Identidad de Género" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Identidad de Género *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <ComboBox x:Name="cmbTitularGenero" Height="32" VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="Varón"/>
                                     <ComboBoxItem Content="Mujer"/>
@@ -81,7 +88,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Estado Civil" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Estado Civil *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <ComboBox x:Name="cmbTitularEstadoCivil" Height="32" VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="Soltero/a"/>
                                     <ComboBoxItem Content="Casado/a"/>
@@ -92,7 +99,7 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="1">
-                                <TextBlock Text="Nivel Educativo Máximo Alcanzado" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Nivel Educativo Máximo Alcanzado *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <ComboBox x:Name="cmbTitularNivelEducativo" Height="32" VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="Sin Instrucción"/>
                                     <ComboBoxItem Content="Primario Completo"/>
@@ -108,6 +115,88 @@
 
                 <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
                     <StackPanel>
+                        <TextBlock Text="📞 Datos de Contacto Directo" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Teléfono Celular (Con código de área)" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtTitularTelefono" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Correo Electrónico (Email)" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtTitularEmail" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="📍 Ubicación Geográfica y Domicilio" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
+
+                        <Grid Margin="0,0,0,15">
+                            <TextBlock Text="Domicilio (Calle, Número, Block o Manzana) *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <TextBox x:Name="txtTitularDomicilio" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1" Margin="0,20,0,0"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Localidad (Municipio / Comuna de Tucumán) *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtTitularLocalidad" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Código Postal *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBox x:Name="txtTitularCodigoPostal" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Coordenadas para el Mapa de Riesgo -->
+                        <Border Background="#F1F5F9" CornerRadius="6" Padding="12" Margin="0,15,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🗺️ Ubicación en el mapa (opcional, para el Mapa de Riesgo)" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,0,0,8"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                        <TextBlock Text="Latitud" Foreground="#64748B" FontSize="11" Margin="0,0,0,3"/>
+                                        <TextBox x:Name="txtLatitud" Height="30" VerticalContentAlignment="Center" Background="White" BorderBrush="#CBD5E1"
+                                                 ToolTip="Ej: -26.83241. También podés pegar acá &quot;-26.83, -65.20&quot; copiado de Google Maps." LostFocus="Coordenadas_LostFocus"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                        <TextBlock Text="Longitud" Foreground="#64748B" FontSize="11" Margin="0,0,0,3"/>
+                                        <TextBox x:Name="txtLongitud" Height="30" VerticalContentAlignment="Center" Background="White" BorderBrush="#CBD5E1" LostFocus="Coordenadas_LostFocus"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Bottom">
+                                        <Button x:Name="btnUbicar" Content="📍 Buscar dirección" Height="30" Padding="10,0" Margin="0,0,6,0"
+                                                Background="#3B82F6" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand" Click="btnUbicar_Click"/>
+                                        <Button x:Name="btnVerGoogleMaps" Content="🌐 Ver en Google Maps" Height="30" Padding="10,0"
+                                                Background="White" Foreground="#334155" BorderBrush="#CBD5E1" Cursor="Hand" Click="btnVerGoogleMaps_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                                <TextBlock x:Name="txtEstadoUbicacion" Text="Sin ubicar. Usá &quot;Buscar dirección&quot; o pegá las coordenadas desde Google Maps (clic derecho sobre el punto)."
+                                           FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,20" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
                         <TextBlock Text="💵 Situación Económica y Laboral" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,15"/>
 
                         <Grid>
@@ -118,7 +207,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Condición Laboral" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Condición Laboral *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <ComboBox x:Name="cmbTitularCondicionLaboral" Height="32" VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="Trabajo Formal"/>
                                     <ComboBoxItem Content="Informal/Changa"/>
@@ -137,6 +226,7 @@
                                 <ComboBox x:Name="cmbTitularPlanSocial" Height="32" VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="No posee"/>
                                     <ComboBoxItem Content="MDS (Ministerio Desarrollo)"/>
+                                    <ComboBoxItem Content="MDS (Provincial)"/>
                                     <ComboBoxItem Content="MTEySS (Trabajo)"/>
                                     <ComboBoxItem Content="Otros Subsidios"/>
                                 </ComboBox>
@@ -157,7 +247,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Total Integrantes del Hogar" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Total Integrantes del Hogar *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <TextBox x:Name="txtCantConvivientes" Height="32" VerticalContentAlignment="Center" Background="#F8FAFC" BorderBrush="#CBD5E1" Text="1"/>
                             </StackPanel>
 
@@ -190,7 +280,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Tipo de Vivienda Afectada" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Tipo de Vivienda Afectada *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <ComboBox x:Name="cmbTipoVivienda" Height="32" VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="Casa"/>
                                     <ComboBoxItem Content="Rancho"/>
@@ -200,7 +290,7 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="1">
-                                <TextBlock Text="Régimen de Tenencia del Terreno" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Régimen de Tenencia del Terreno *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <ComboBox x:Name="cmbTenenciaTerreno" Height="32" VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="Propio con Escritura"/>
                                     <ComboBoxItem Content="Propio con Boleto Compra-Venta"/>
@@ -217,7 +307,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Material Predominante del Piso" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Material Predominante del Piso *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <ComboBox x:Name="cmbMaterialPiso" Height="32" VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="Cerámica / Baldosa / Madera"/>
                                     <ComboBoxItem Content="Carpeta / Contrapiso"/>
@@ -226,7 +316,7 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="1">
-                                <TextBlock Text="Material Predominante del Techo" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Material Predominante del Techo *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <ComboBox x:Name="cmbMaterialTecho" Height="32" VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="Losa / Teja / Chapa con cielorraso"/>
                                     <ComboBoxItem Content="Chapa de metal simple"/>
@@ -242,7 +332,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="Procedencia del Agua para beber/cocinar" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Procedencia del Agua para beber/cocinar *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <ComboBox x:Name="cmbProcedenciaAgua" Height="32" VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="Red pública (Agua corriente)"/>
                                     <ComboBoxItem Content="Perforación con bomba (motor/manual)"/>
@@ -251,7 +341,7 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="1">
-                                <TextBlock Text="Desagüe / Sistema del Inodoro" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <TextBlock Text="Desagüe / Sistema del Inodoro *" Foreground="#64748B" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <ComboBox x:Name="cmbDesagueInodoro" Height="32" VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="A red pública (Cloaca)"/>
                                     <ComboBoxItem Content="A cámara séptica y pozo ciego"/>
