@@ -18,6 +18,9 @@ namespace proyectoHabitar
             CultureInfo.DefaultThreadCurrentUICulture = cultura;
             FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(cultura.IetfLanguageTag)));
+            // Los <Run> (dentro de un TextBlock) son FrameworkContentElement y no heredan lo anterior.
+            FrameworkContentElement.LanguageProperty.OverrideMetadata(typeof(System.Windows.Documents.TextElement),
+                new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(cultura.IetfLanguageTag)));
 
             // Último recurso: un error inesperado se muestra en lugar de cerrar la app.
             DispatcherUnhandledException += (s, args) =>
